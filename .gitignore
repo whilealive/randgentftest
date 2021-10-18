@@ -1,0 +1,13 @@
+*.toc
+*.pdf
+*.aux
+*.lof
+*.log
+*.lot
+*.swp
+*.fls
+*.fdb_latexmk
+*.jpg
+*.eps
+Fragesammlung/
+misc/
