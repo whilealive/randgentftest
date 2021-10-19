@@ -28,8 +28,6 @@
 \cfoot{}
 \chead[]{Aussagetest}
 
-\usepackage{graphicx}
-
 \usepackage{siunitx}
 \sisetup{per-mode=symbol,exponent-product=\cdot}
 
@@ -49,7 +47,6 @@
 \newlist{checklist}{itemize}{2}
 \setlist[checklist,1,2]{label=\checkbox,leftmargin=*,nosep,align=left,itemsep=1ex}
 
-
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
 \usepgfplotslibrary{statistics}
@@ -57,19 +54,36 @@
 
 \usepackage{luacode}
 
-%\graphicspath{{Loesungen/}}
-%
-%\SetThema{Algebra}
 
 % ------------------
-% Mögliche Optionen:
+% Optionen:
 % ------------------
+\newcommand*{\Oberthema}{01-Algebra}
+%\newcommand*{\Oberthema}{02-Potenzrechnen}
+%\newcommand*{\Oberthema}{03-Lineare-Gleichungen}
+%\newcommand*{\Oberthema}{04-Lineare-Gleichungssysteme}
+%\newcommand*{\Oberthema}{05-Quadratische-Gleichungen}
+%\newcommand*{\Oberthema}{06-Nichtlineare-Gleichungen}
+%\newcommand*{\Oberthema}{07-Lineare-Funktionen}
+%\newcommand*{\Oberthema}{08-Quadratische-Funktionen}
+%\newcommand*{\Oberthema}{09-Potenzfunktionen}
+%\newcommand*{\Oberthema}{10-Polynomfunktionen}
+%\newcommand*{\Oberthema}{11-Exponentialfunktionen}
+%\newcommand*{\Oberthema}{12-Datenanalyse}
+%\newcommand*{\Oberthema}{13-Wahrscheinlichkeitsrechnen}
+%\newcommand*{\Oberthema}{14-Planimetrie-I}
+%\newcommand*{\Oberthema}{15-Planimetrie-II}
+%\newcommand*{\Oberthema}{16-Trigonometrie-I}
+%\newcommand*{\Oberthema}{17-Trigonometrie-II}
+%\newcommand*{\Oberthema}{18-Stereometrie}
+%\newcommand*{\Oberthema}{19-Vektorgeometrie}
 
+
+% TODO:
 % Ausrichtung: TALS, DL, GESO
 
 % Lösungen: Ja, Nein
 
-% Oberthema: 01-Algebra 02-Potenzrechnen 03-Lineare-Gleichungen 04-Lineare-Gleichungssysteme 05-Quadratische-Gleichungen 06-Nichtlineare-Gleichungen 07-Lineare-Funktionen 08-Quadratische-Funktionen 09-Potenzfunktionen 10-Polynomfunktionen 11-Exponentialfunktionen 12-Datenanalyse 13-Wahrscheinlichkeitsrechnen 14-Planimetrie-I 15-Planimetrie-II 16-Trigonometrie-I 17-Trigonometrie-II 18-Stereometrie 19-Vektorgeometrie
 
 % Unterthema: Quadratwurzel Bruchterme Kreisberühraufgaben ...
 
@@ -79,9 +93,6 @@
 % Anzahl wahr: 2
 % Anzahl falsch: 4
 
-% ------------------
-
-\newcommand*{\Oberthema}{01-Algebra}
 
 
 
@@ -93,15 +104,14 @@ Kreuzen Sie alle wahren Aussagen an.
 
 \vskip\baselineskip
 
-\begin{checklist}
-    \begin{luacode}
-      require("statementCollator.lua")
-      collateStatements(lfs.currentdir() .. "/Fragesammlung/\Oberthema/")
-    \end{luacode}
-\end{checklist}
+\begin{luacode}
+  require("statementCollator.lua")
+  collateStatements(lfs.currentdir() .. "/Fragesammlung/\Oberthema/")
+  printStatements()
+  printSolutions()
+\end{luacode}
 
-\clearpage
+%\clearpage
 
 \end{document}
 % ==================================================================
-

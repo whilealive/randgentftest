@@ -71,11 +71,36 @@ function collateStatements(dir)
   local filenamesTrue=collectValidFiles(trueDir)
   local filenamesFalse=collectValidFiles(falseDir)
 
+  filenamesMixed = {}  -- global
   for i = 1, #filenamesTrue do
-    tex.sprint("\\item[\\checkedbox]\\input " .. trueDir .. filenamesTrue[i] .. " " .. "\\par")
+    filenamesMixed[i] = {filename = filenamesTrue[i], answer = true, dir=trueDir}
   end
-
   for i = 1, #filenamesFalse do
-    tex.sprint("\\item\\input " .. falseDir .. filenamesFalse[i] .. " " .. "\\par")
+    filenamesMixed[#filenamesTrue + i] = {filename = filenamesFalse[i], answer = false, dir=falseDir}
   end
+end
+
+function printStatements()
+  tex.sprint("\\begin{checklist}\\par")
+  for i = 1, #filenamesMixed do
+    if filenamesMixed[i].answer then
+      tex.sprint("\\item\\input " .. filenamesMixed[i].dir .. filenamesMixed[i].filename .. " " .. "\\par")
+    else
+      tex.sprint("\\item\\input " .. filenamesMixed[i].dir .. filenamesMixed[i].filename .. " " .. "\\par")
+    end
+  end
+  tex.sprint("\\end{checklist}\\clearpage")
+end
+
+
+function printSolutions()
+  tex.sprint("\\begin{checklist}\\par")
+  for i = 1, #filenamesMixed do
+    if filenamesMixed[i].answer then
+      tex.sprint("\\item[\\checkedbox]\\input " .. filenamesMixed[i].dir .. filenamesMixed[i].filename .. " " .. "\\par")
+    else
+      tex.sprint("\\item\\input " .. filenamesMixed[i].dir .. filenamesMixed[i].filename .. " " .. "\\par")
+    end
+  end
+  tex.sprint("\\end{checklist}")
 end
