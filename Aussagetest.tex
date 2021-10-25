@@ -82,8 +82,6 @@
 % TODO:
 % Ausrichtung: TALS, DL, GESO
 
-% Lösungen: Ja, Nein
-
 
 % Unterthema: Quadratwurzel Bruchterme Kreisberühraufgaben ...
 
@@ -102,16 +100,15 @@
 \section*{Wahr-Falsch-Fragen, Algebra}
 Kreuzen Sie alle wahren Aussagen an.
 
-\vskip\baselineskip
+%\vskip\baselineskip
+\clearpage
 
 \begin{luacode}
   require("statementCollator.lua")
-  collateStatements(lfs.currentdir() .. "/Fragesammlung/\Oberthema/")
+  collateStatements(lfs.currentdir() .. "/Fragesammlung/\Oberthema/", 3, 5)
   printStatements()
   printSolutions()
 \end{luacode}
-
-%\clearpage
 
 \end{document}
 % ==================================================================

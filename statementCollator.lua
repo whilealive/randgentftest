@@ -30,6 +30,16 @@ function dirtree(dir)
 end
 
 
+-- Fisher-Yates shuffle
+function shuffle(tbl)
+  for i = #tbl, 2, -1 do
+    local j = math.random(i)
+    tbl[i], tbl[j] = tbl[j], tbl[i]
+  end
+  --return tbl
+end
+
+
 function GetFileExtension(filename)
   return filename:match("^.+(%..+)$")
 end
@@ -64,20 +74,43 @@ function collectValidFiles(dir)
 end
 
 
-function collateStatements(dir)
+function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
   local trueDir=dir.."01-wahr/"
   local falseDir=dir.."02-falsch/"
 
   local filenamesTrue=collectValidFiles(trueDir)
   local filenamesFalse=collectValidFiles(falseDir)
 
+  if numberOfTrueStatements > #filenamesTrue or numberOfFalseStatements > #filenamesFalse then
+    tex.error("number of chosen statements is higher than what we have in the folder")
+  end
+
   filenamesMixed = {}  -- global
+
+  local counter = 1
+  for i = numberOfTrueStatements, 1, -1 do
+    local j = math.random(i)
+    filenamesMixed[counter] = {filename = filenamesTrue[j], answer = true, dir=trueDir}
+    table.remove(filenamesTrue, j)
+    counter = counter + 1
+  end
+  for i = numberOfFalseStatements, 1, -1 do
+    local j = math.random(i)
+    filenamesMixed[counter] = {filename = filenamesFalse[j], answer = false, dir=falseDir}
+    table.remove(filenamesFalse, j)
+    counter = counter + 1
+  end
+
+--[[
   for i = 1, #filenamesTrue do
     filenamesMixed[i] = {filename = filenamesTrue[i], answer = true, dir=trueDir}
   end
   for i = 1, #filenamesFalse do
     filenamesMixed[#filenamesTrue + i] = {filename = filenamesFalse[i], answer = false, dir=falseDir}
   end
+  --]]
+
+  shuffle(filenamesMixed)
 end
 
 function printStatements()
