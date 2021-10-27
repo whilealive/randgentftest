@@ -8,7 +8,7 @@
 
 -- dirtree iterator:
 -- to be found at: http://lua-users.org/wiki/DirTreeIterator
-function dirtree(dir)
+local function dirtree(dir)
   if string.sub(dir, -1) == "/" then
     dir=string.sub(dir, 1, -2)
   end
@@ -31,7 +31,7 @@ end
 
 
 -- Fisher-Yates shuffle
-function shuffle(tbl)
+local function shuffle(tbl)
   for i = #tbl, 2, -1 do
     local j = math.random(i)
     tbl[i], tbl[j] = tbl[j], tbl[i]
@@ -40,12 +40,12 @@ function shuffle(tbl)
 end
 
 
-function GetFileExtension(filename)
+local function GetFileExtension(filename)
   return filename:match("^.+(%..+)$")
 end
 
 
-function isValidTexFile(filename)
+local function isValidTexFile(filename)
   --if filename:match("_QuickCompile") then
   --  return false
   --end
@@ -56,9 +56,7 @@ function isValidTexFile(filename)
 end
 
 
-function collectValidFiles(dir)
-  -- Lua doesn't guarantee any iteration order for the associative part of the table!
-  -- Therefore, we must order the entries manually
+local function collectValidFiles(dir)
   local filenames = {}
 
   for i in dirtree(dir) do
@@ -67,8 +65,6 @@ function collectValidFiles(dir)
       table.insert(filenames, filename)
     end
   end
-
-  table.sort(filenames)
 
   return filenames
 end
@@ -127,6 +123,7 @@ end
 
 
 function printSolutions()
+  tex.sprint("\\section*{Lösungen}")
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #filenamesMixed do
     if filenamesMixed[i].answer then

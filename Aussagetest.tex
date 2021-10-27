@@ -7,53 +7,7 @@
 % OWNER    Bischofberger
 % ==================================================================
 
-%\documentclass{bmzFrommenwilerLT}
-
-\documentclass[10pt]{article}
-\usepackage[a4paper,textwidth=160mm,top=30mm,bottom=40mm]{geometry}  % extra wide
-\usepackage[ngerman]{babel}
-\usepackage[babel=true]{microtype}
-
-\usepackage{mathtools}
-\RequirePackage[makeroom]{cancel}
-
-\setlength{\parindent}{0pt}
-\allowdisplaybreaks
-\raggedbottom
-
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\lhead{B\kern0.10em M\kern0.07em S Zürich}
-\rhead{\thepage}
-\cfoot{}
-\chead[]{Aussagetest}
-
-\usepackage{siunitx}
-\sisetup{per-mode=symbol,exponent-product=\cdot}
-
-\usepackage{tikz}
-\usetikzlibrary{calc,angles,intersections,arrows.meta}
-\tikzset{>={Latex}}
-
-\usepackage[inline]{enumitem}
-\newcommand*{\checkbox}{\tikz\draw (0,0) rectangle (.25,.25);}
-\newcommand*{\checkedbox}{%
-  \begin{tikzpicture}%
-  \draw (0,0) rectangle (.25,.25);%
-  \draw (0,0) -- (.25,.25);%
-  \draw (.25,0) -- (0,.25);%
-  \end{tikzpicture}%
-  }%
-\newlist{checklist}{itemize}{2}
-\setlist[checklist,1,2]{label=\checkbox,leftmargin=*,nosep,align=left,itemsep=1ex}
-
-\usepackage{pgfplots}
-\pgfplotsset{compat=newest}
-\usepgfplotslibrary{statistics}
-\pgfplotsset{axis lines=center,axis line style={-Latex}}
-
-\usepackage{luacode}
-
+\documentclass{AussagetestClass}
 
 % ------------------
 % Optionen:
@@ -78,37 +32,38 @@
 %\newcommand*{\Oberthema}{18-Stereometrie}
 %\newcommand*{\Oberthema}{19-Vektorgeometrie}
 
+\newcommand*{\AnzahlWahreAussagen}{3}
+\newcommand*{\AnzahlFalscheAussagen}{5}
+
+
 
 % TODO:
 % Ausrichtung: TALS, DL, GESO
-
 
 % Unterthema: Quadratwurzel Bruchterme Kreisberühraufgaben ...
 
 % Oberthema kann nur eines angegeben werden
 % Unterthemen können mehrere in einer Liste angegeben werden
 
-% Anzahl wahr: 2
-% Anzahl falsch: 4
-
-
 
 
 % ==================================================================
 \begin{document}
 
-\section*{Wahr-Falsch-Fragen, Algebra}
+%\section*{Aussagetest, \Oberthema}
+\section*{Aussagetest, Algebra}
 Kreuzen Sie alle wahren Aussagen an.
 
-%\vskip\baselineskip
-\clearpage
+\vskip\baselineskip
+%\clearpage
 
 \begin{luacode}
   require("statementCollator.lua")
-  collateStatements(lfs.currentdir() .. "/Fragesammlung/\Oberthema/", 3, 5)
+  collateStatements(lfs.currentdir() .. "/Fragesammlung/\Oberthema/", \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
   printStatements()
   printSolutions()
 \end{luacode}
+
 
 \end{document}
 % ==================================================================
