@@ -2,7 +2,7 @@
 % FILE     AussagetestClass.cls
 % INFO     
 %
-% DATE     26.10.2021
+% DATE     01.11.2021
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -55,8 +55,7 @@
 
 \RequirePackage{pgfplots}
 \pgfplotsset{compat=newest}
-\usepgfplotslibrary{statistics}
 \pgfplotsset{axis lines=center,axis line style={-Latex}}
 
-\RequirePackage{luacode}
+%\RequirePackage{luacode}
 

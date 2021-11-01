@@ -2,7 +2,7 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     18.10.2021
+-- DATE     01.11.2021
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -81,7 +81,7 @@ function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
     tex.error("number of chosen statements is higher than what we have in the folder")
   end
 
-  filenamesMixed = {}  -- global
+  local filenamesMixed = {}
 
   local counter = 1
   for i = numberOfTrueStatements, 1, -1 do
@@ -107,29 +107,31 @@ function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
   --]]
 
   shuffle(filenamesMixed)
+
+  return filenamesMixed
 end
 
-function printStatements()
+function printStatements(tbl)
   tex.sprint("\\begin{checklist}\\par")
-  for i = 1, #filenamesMixed do
-    if filenamesMixed[i].answer then
-      tex.sprint("\\item\\input " .. filenamesMixed[i].dir .. filenamesMixed[i].filename .. " " .. "\\par")
+  for i = 1, #tbl do
+    if tbl[i].answer then
+      tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
     else
-      tex.sprint("\\item\\input " .. filenamesMixed[i].dir .. filenamesMixed[i].filename .. " " .. "\\par")
+      tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
     end
   end
   tex.sprint("\\end{checklist}\\clearpage")
 end
 
 
-function printSolutions()
+function printSolutions(tbl)
   tex.sprint("\\section*{Lösungen}")
   tex.sprint("\\begin{checklist}\\par")
-  for i = 1, #filenamesMixed do
-    if filenamesMixed[i].answer then
-      tex.sprint("\\item[\\checkedbox]\\input " .. filenamesMixed[i].dir .. filenamesMixed[i].filename .. " " .. "\\par")
+  for i = 1, #tbl do
+    if tbl[i].answer then
+      tex.sprint("\\item[\\checkedbox]\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
     else
-      tex.sprint("\\item\\input " .. filenamesMixed[i].dir .. filenamesMixed[i].filename .. " " .. "\\par")
+      tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
     end
   end
   tex.sprint("\\end{checklist}")
