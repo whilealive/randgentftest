@@ -2,12 +2,27 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     01.11.2021
+-- DATE     02.11.2021
 -- OWNER    Bischofberger
 -- ==================================================================
 
--- dirtree iterator:
--- to be found at: http://lua-users.org/wiki/DirTreeIterator
+
+-- OS checker
+-- reference: https://stackoverflow.com/questions/295052/how-can-i-determine-the-os-of-the-system-from-within-a-lua-script
+local function checkOS()
+  local sep = package.config:sub(1,1)
+  if sep == "/" then
+    return "LinuxOrMac"
+  elseif sep == "\\" then
+    return "Windows"
+  else
+    return "Other"
+  end
+end
+
+
+-- dirtree iterator
+-- reference: http://lua-users.org/wiki/DirTreeIterator
 local function dirtree(dir)
   if string.sub(dir, -1) == "/" then
     dir=string.sub(dir, 1, -2)
@@ -31,6 +46,7 @@ end
 
 
 -- Fisher-Yates shuffle
+-- reference: https://gist.github.com/Uradamus/10323382
 local function shuffle(tbl)
   for i = #tbl, 2, -1 do
     local j = math.random(i)
@@ -136,3 +152,12 @@ function printSolutions(tbl)
   end
   tex.sprint("\\end{checklist}")
 end
+
+
+
+
+
+-- --------------------
+-- some debugging stuff
+-- --------------------
+--print(checkOS())
