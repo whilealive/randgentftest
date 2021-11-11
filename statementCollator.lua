@@ -2,7 +2,7 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     02.11.2021
+-- DATE     11.11.2021
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -11,12 +11,9 @@
 -- reference: https://stackoverflow.com/questions/295052/how-can-i-determine-the-os-of-the-system-from-within-a-lua-script
 local function checkOS()
   local sep = package.config:sub(1,1)
-  if sep == "/" then
-    return "LinuxOrMac"
-  elseif sep == "\\" then
-    return "Windows"
-  else
-    return "Other"
+  if     sep == "/"  then return "LinuxOrMac"
+  elseif sep == "\\" then return "Windows"
+  else                    return "Other"
   end
 end
 
@@ -152,12 +149,3 @@ function printSolutions(tbl)
   end
   tex.sprint("\\end{checklist}")
 end
-
-
-
-
-
--- --------------------
--- some debugging stuff
--- --------------------
---print(checkOS())

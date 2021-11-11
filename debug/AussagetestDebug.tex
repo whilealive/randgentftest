@@ -1,13 +1,13 @@
 % ==================================================================
-% FILE     Aussagetest.tex
+% FILE     AussagetestDebug.tex
 % MACHINE  all
 % INFO     -
 %
-% DATE     01.11.2021
+% DATE     11.11.2021
 % OWNER    Bischofberger
 % ==================================================================
 
-\documentclass{AussagetestClass}
+\documentclass{../AussagetestClass}
 
 % ------------------
 % Optionen:
@@ -50,21 +50,42 @@
 % ==================================================================
 \begin{document}
 
-%\section*{Aussagetest, \Oberthema}
-\section*{Aussagetest, Algebra}
-Kreuzen Sie alle wahren Aussagen an.
-
-\vskip\baselineskip
-%\clearpage
+%\directlua{
+%  require('../statementCollator.lua')
+%  tex.print(checkOS())
+%}
 
 \directlua{
-  require('statementCollator.lua')
-  local mixedstatements = collateStatements(lfs.currentdir() .. '/Fragesammlung/\Oberthema/', \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
-  printStatements(mixedstatements)
-  printSolutions(mixedstatements)
+  require('statementDebugger.lua')
 }
 
+\directlua{
+  tex.print(lfs.currentdir())
+}
 
 \end{document}
 % ==================================================================
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%\begin{luacode}
+%  require("statementCollator.lua")
+%  collateStatements(lfs.currentdir() .. "/Fragesammlung/\Oberthema/", \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
+%  printStatements()
+%  printSolutions()
+%\end{luacode}
