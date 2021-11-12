@@ -2,7 +2,7 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     11.11.2021
+-- DATE     12.11.2021
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -98,26 +98,17 @@ function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
 
   local counter = 1
   for i = numberOfTrueStatements, 1, -1 do
-    local j = math.random(i)
+    local j = math.random(#filenamesTrue)
     filenamesMixed[counter] = {filename = filenamesTrue[j], answer = true, dir=trueDir}
     table.remove(filenamesTrue, j)
     counter = counter + 1
   end
   for i = numberOfFalseStatements, 1, -1 do
-    local j = math.random(i)
+    local j = math.random(#filenamesFalse)
     filenamesMixed[counter] = {filename = filenamesFalse[j], answer = false, dir=falseDir}
     table.remove(filenamesFalse, j)
     counter = counter + 1
   end
-
---[[
-  for i = 1, #filenamesTrue do
-    filenamesMixed[i] = {filename = filenamesTrue[i], answer = true, dir=trueDir}
-  end
-  for i = 1, #filenamesFalse do
-    filenamesMixed[#filenamesTrue + i] = {filename = filenamesFalse[i], answer = false, dir=falseDir}
-  end
-  --]]
 
   shuffle(filenamesMixed)
 
@@ -127,11 +118,7 @@ end
 function printStatements(tbl)
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
-    if tbl[i].answer then
-      tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
-    else
-      tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
-    end
+    tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
   end
   tex.sprint("\\end{checklist}\\clearpage")
 end
