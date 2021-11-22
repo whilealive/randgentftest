@@ -2,7 +2,7 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     12.11.2021
+-- DATE     22.11.2021
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -84,36 +84,33 @@ end
 
 
 function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
-  local trueDir=dir.."01-wahr/"
-  local falseDir=dir.."02-falsch/"
+  local trueDir  = dir.."01-wahr/"
+  local falseDir = dir.."02-falsch/"
 
   local filenamesTrue=collectValidFiles(trueDir)
   local filenamesFalse=collectValidFiles(falseDir)
 
   if numberOfTrueStatements > #filenamesTrue or numberOfFalseStatements > #filenamesFalse then
     tex.error("number of chosen statements is higher than what we have in the folder")
+    return {}
   end
 
   local filenamesMixed = {}
 
-  local counter = 1
-  for i = numberOfTrueStatements, 1, -1 do
-    local j = math.random(#filenamesTrue)
-    filenamesMixed[counter] = {filename = filenamesTrue[j], answer = true, dir=trueDir}
-    table.remove(filenamesTrue, j)
-    counter = counter + 1
+  for i = 1, numberOfTrueStatements do
+    local fn = table.remove(filenamesTrue, math.random(#filenamesTrue))
+    table.insert(filenamesMixed, {filename = fn, answer = true, dir=trueDir})
   end
-  for i = numberOfFalseStatements, 1, -1 do
-    local j = math.random(#filenamesFalse)
-    filenamesMixed[counter] = {filename = filenamesFalse[j], answer = false, dir=falseDir}
-    table.remove(filenamesFalse, j)
-    counter = counter + 1
+  for i = 1, numberOfFalseStatements do
+    local fn = table.remove(filenamesFalse, math.random(#filenamesFalse))
+    table.insert(filenamesMixed, {filename = fn, answer = false, dir=falseDir})
   end
 
   shuffle(filenamesMixed)
 
   return filenamesMixed
 end
+
 
 function printStatements(tbl)
   tex.sprint("\\begin{checklist}\\par")
