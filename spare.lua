@@ -30,3 +30,20 @@ local Folder = {
 --16-Trigonometrie-I
 --17-Trigonometrie-II
 --18-Stereometrie
+
+
+
+
+-- TODO: - «filenames» is unsorted but we must have filesystem order
+--       - how to determine if statement is true/false? We need this information for a 
+--         checked version
+--       - where to save full path of files in order to include it by \input?
+--         -> see «collectValidFiles()»
+function printAll(dir)
+  local filenames = collectValidFiles(dir)  -- collects files recursively, incl. subfolders!
+  tex.sprint("\\begin{checklist}\\par")
+  for fn in filenames do
+    tex.sprint("\\item\\input " .. tbl[i].dir .. fn .. " " .. "\\par")
+  end
+  tex.sprint("\\end{checklist}")
+end
