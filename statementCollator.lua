@@ -2,7 +2,7 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     22.11.2021
+-- DATE     26.11.2021
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -15,6 +15,17 @@ local function checkOS()
   elseif sep == "\\" then return "Windows"
   else                    return "Other"
   end
+end
+
+
+-- Fisher-Yates shuffle
+-- reference: https://gist.github.com/Uradamus/10323382
+local function shuffle(tbl)
+  for i = #tbl, 2, -1 do
+    local j = math.random(i)
+    tbl[i], tbl[j] = tbl[j], tbl[i]
+  end
+  --return tbl
 end
 
 
@@ -39,17 +50,6 @@ local function dirtree(dir)
   end
 
   return coroutine.wrap(function() yieldtree(dir) end)
-end
-
-
--- Fisher-Yates shuffle
--- reference: https://gist.github.com/Uradamus/10323382
-local function shuffle(tbl)
-  for i = #tbl, 2, -1 do
-    local j = math.random(i)
-    tbl[i], tbl[j] = tbl[j], tbl[i]
-  end
-  --return tbl
 end
 
 
@@ -132,4 +132,22 @@ function printSolutions(tbl)
     end
   end
   tex.sprint("\\end{checklist}")
+end
+
+
+
+
+
+
+
+-----------------------
+-- debugging section --
+-----------------------
+debug = {}
+
+function debug.printdirtree(dir)
+  for fn in dirtree(dir) do
+    --fn = fn:gsub(".*/([^/]+)$","%1")
+    tex.sprint(fn .. "\\par")
+  end
 end

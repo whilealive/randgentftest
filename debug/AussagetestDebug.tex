@@ -1,91 +1,33 @@
 % ==================================================================
-% FILE     AussagetestDebug.tex
+% FILE     debug/AussagetestDebug.tex
 % MACHINE  all
 % INFO     -
 %
-% DATE     11.11.2021
+% DATE     25.11.2021
 % OWNER    Bischofberger
 % ==================================================================
 
 \documentclass{../AussagetestClass}
 
-% ------------------
-% Optionen:
-% ------------------
 \newcommand*{\Oberthema}{01-Algebra}
-%\newcommand*{\Oberthema}{02-Potenzrechnen}
-%\newcommand*{\Oberthema}{03-Lineare-Gleichungen}
-%\newcommand*{\Oberthema}{04-Lineare-Gleichungssysteme}
-%\newcommand*{\Oberthema}{05-Quadratische-Gleichungen}
-%\newcommand*{\Oberthema}{06-Nichtlineare-Gleichungen}
-%\newcommand*{\Oberthema}{07-Lineare-Funktionen}
-%\newcommand*{\Oberthema}{08-Quadratische-Funktionen}
-%\newcommand*{\Oberthema}{09-Potenzfunktionen}
-%\newcommand*{\Oberthema}{10-Polynomfunktionen}
-%\newcommand*{\Oberthema}{11-Exponentialfunktionen}
-%\newcommand*{\Oberthema}{12-Datenanalyse}
-%\newcommand*{\Oberthema}{13-Wahrscheinlichkeitsrechnen}
-%\newcommand*{\Oberthema}{14-Planimetrie-I}
-%\newcommand*{\Oberthema}{15-Planimetrie-II}
-%\newcommand*{\Oberthema}{16-Trigonometrie-I}
-%\newcommand*{\Oberthema}{17-Trigonometrie-II}
-%\newcommand*{\Oberthema}{18-Stereometrie}
-%\newcommand*{\Oberthema}{19-Vektorgeometrie}
 
 \newcommand*{\AnzahlWahreAussagen}{3}
 \newcommand*{\AnzahlFalscheAussagen}{5}
 
 
-
-% TODO:
-% Ausrichtung: TALS, DL, GESO
-
-% Unterthema: Quadratwurzel Bruchterme Kreisberühraufgaben ...
-
-% Oberthema kann nur eines angegeben werden
-% Unterthemen können mehrere in einer Liste angegeben werden
-
-
-
 % ==================================================================
 \begin{document}
 
-%\directlua{
-%  require('../statementCollator.lua')
-%  tex.print(checkOS())
-%}
+\scriptsize
 
 \directlua{
-  require('statementDebugger.lua')
+  tex.sprint(lfs.currentdir() .. '\\par')
 }
 
 \directlua{
-  tex.print(lfs.currentdir())
+  require('../statementCollator.lua')
+  debug.printdirtree(lfs.currentdir())
 }
 
 \end{document}
 % ==================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%\begin{luacode}
-%  require("statementCollator.lua")
-%  collateStatements(lfs.currentdir() .. "/Fragesammlung/\Oberthema/", \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
-%  printStatements()
-%  printSolutions()
-%\end{luacode}
