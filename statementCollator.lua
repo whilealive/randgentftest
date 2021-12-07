@@ -2,7 +2,7 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     26.11.2021
+-- DATE     29.11.2021
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -148,6 +148,6 @@ debug = {}
 function debug.printdirtree(dir)
   for fn in dirtree(dir) do
     --fn = fn:gsub(".*/([^/]+)$","%1")
-    tex.sprint(fn .. "\\par")
+    tex.sprint("\\verb+" .. fn .. "+\\par")
   end
 end

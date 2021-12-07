@@ -1,13 +1,13 @@
 % ==================================================================
-% FILE     debug/AussagetestDebug.tex
+% FILE     AussagetestDebug.tex
 % MACHINE  all
 % INFO     -
 %
-% DATE     25.11.2021
+% DATE     29.11.2021
 % OWNER    Bischofberger
 % ==================================================================
 
-\documentclass{../AussagetestClass}
+\documentclass{AussagetestClass}
 
 \newcommand*{\Oberthema}{01-Algebra}
 
@@ -21,11 +21,13 @@
 \scriptsize
 
 \directlua{
-  tex.sprint(lfs.currentdir() .. '\\par')
+  tex.sprint('\\verb+' .. lfs.currentdir() .. '+\\par')
 }
 
+\clearpage
+
 \directlua{
-  require('../statementCollator.lua')
+  require('statementCollator.lua')
   debug.printdirtree(lfs.currentdir())
 }
 
