@@ -2,14 +2,14 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     29.11.2021
+-- DATE     25.04.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
 
 -- OS checker
 -- reference: https://stackoverflow.com/questions/295052/how-can-i-determine-the-os-of-the-system-from-within-a-lua-script
-local function checkOS()
+local function currentOS()
   local sep = package.config:sub(1,1)
   if     sep == "/"  then return "LinuxOrMac"
   elseif sep == "\\" then return "Windows"
@@ -29,17 +29,28 @@ local function shuffle(tbl)
 end
 
 
+function getPathSeparator()
+  local sep = "/"
+  if currentOS() == "Windows" then 
+    sep = "\\"
+  end
+  return sep
+end
+
+
 -- dirtree iterator
 -- reference: http://lua-users.org/wiki/DirTreeIterator
 local function dirtree(dir)
-  if string.sub(dir, -1) == "/" then
+  local sep = getPathSeparator()
+  
+  if string.sub(dir, -1) == sep then
     dir=string.sub(dir, 1, -2)
   end
 
   local function yieldtree(dir)
     for entry in lfs.dir(dir) do
       if not entry:match("^%.") then
-        entry=dir.."/"..entry
+        entry = dir .. sep .. entry
           if lfs.isdir(entry) then
             yieldtree(entry)
           else
@@ -70,10 +81,15 @@ end
 
 
 local function collectValidFiles(dir)
+  local regex = ".*/([^/]+)$"
+  if currentOS() == "Windows" then 
+    regex = ".*\\([^/]+)$"
+  end
+
   local filenames = {}
 
   for i in dirtree(dir) do
-    local filename = i:gsub(".*/([^/]+)$","%1")
+    local filename = i:gsub(regex,"%1")
     if isValidTexFile(filename) then
       table.insert(filenames, filename)
     end
@@ -112,7 +128,18 @@ function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
 end
 
 
+local function changePathsToUnixStyle(tbl)
+  for i = 1, #tbl do
+    tbl[i].dir = string.gsub(tbl[i].dir, '\\', '/')
+  end
+end
+
+
 function printStatements(tbl)
+  if currentOS() == "Windows" then 
+    changePathsToUnixStyle(tbl) 
+  end
+
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
     tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
@@ -122,6 +149,10 @@ end
 
 
 function printSolutions(tbl)
+  if currentOS() == "Windows" then 
+    changePathsToUnixStyle(tbl) 
+  end
+
   tex.sprint("\\section*{Lösungen}")
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
@@ -145,9 +176,20 @@ end
 -----------------------
 debug = {}
 
+
 function debug.printdirtree(dir)
   for fn in dirtree(dir) do
     --fn = fn:gsub(".*/([^/]+)$","%1")
     tex.sprint("\\verb+" .. fn .. "+\\par")
+  end
+end
+
+
+function debug.printInputFilenames(tbl)
+  if currentOS() == "Windows" then 
+    changePathsToUnixStyle(tbl) 
+  end
+  for i = 1, #tbl do
+    tex.sprint("\\verb+" .. tbl[i].dir .. tbl[i].filename .. "+\\par")
   end
 end
