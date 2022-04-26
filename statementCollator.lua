@@ -142,7 +142,7 @@ function printStatements(tbl)
 
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
-    tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
+    tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " \\par")
   end
   tex.sprint("\\end{checklist}\\clearpage")
 end
@@ -157,12 +157,73 @@ function printSolutions(tbl)
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
     if tbl[i].answer then
-      tex.sprint("\\item[\\checkedbox]\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
+      tex.sprint("\\item[\\checkedbox]\\input " .. tbl[i].dir .. tbl[i].filename .. " \\par")
     else
-      tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " " .. "\\par")
+      tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " \\par")
     end
   end
   tex.sprint("\\end{checklist}")
+end
+
+
+--local escape_lua_pattern
+--do
+--  local matches =
+--  {
+--    ["^"] = "%^";
+--    ["$"] = "%$";
+--    ["("] = "%(";
+--    [")"] = "%)";
+--    ["%"] = "%%";
+--    ["."] = "%.";
+--    ["["] = "%[";
+--    ["]"] = "%]";
+--    ["*"] = "%*";
+--    ["+"] = "%+";
+--    ["-"] = "%-";
+--    ["?"] = "%?";
+--  }
+--
+--  escape_lua_pattern = function(s)
+--    return (s:gsub(".", matches))
+--  end
+--end
+
+
+function printAll(dir)
+  local regex = ".*/([^/]+)$"
+  if currentOS() == "Windows" then 
+    regex = ".*\\([^/]+)$"
+  end
+
+  local filenames = {}
+  --local currentdir = escape_lua_pattern(lfs.currentdir())
+
+  for fn in dirtree(dir) do
+    local fnonly = fn:gsub(regex,"%1")
+    if isValidTexFile(fnonly) then
+      --local fnnpath = string.gsub(fn, currentdir.."/", "")
+      --table.insert(filenames, fnnpath)
+      table.insert(filenames, fn)
+    end
+  end
+
+    --tex.sprint("\\input " .. filenames[1] .. " " .. "\\par")
+    --tex.sprint("\\input " .. filenames[2] .. " " .. "\\par")
+    --tex.sprint("\\input " .. filenames[3] .. " " .. "\\par")
+  
+  tex.sprint("\\begin{checklist}\\par")
+  for i = 1, #filenames do
+    tex.sprint("\\item\\input " .. filenames[i] .. " \\par")
+    tex.sprint("\\verb+" .. filenames[i] .. "+\\par")
+  end
+  tex.sprint("\\end{checklist}")
+
+  --for i = 1, #filenames do
+  --  tex.sprint("\\verb+" .. filenames[i] .. "+\\par")
+  --end
+  --tex.sprint("\\verb+" .. lfs.currentdir() .. "+\\par")
+  --tex.sprint("\\verb+" .. blah .. "+\\par")
 end
 
 

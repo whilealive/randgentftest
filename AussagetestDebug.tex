@@ -3,7 +3,7 @@
 % MACHINE  all
 % INFO     -
 %
-% DATE     29.11.2021
+% DATE     26.04.2022
 % OWNER    Bischofberger
 % ==================================================================
 
@@ -18,18 +18,23 @@
 % ==================================================================
 \begin{document}
 
-\scriptsize
-
-\directlua{
-  tex.sprint('\\verb+' .. lfs.currentdir() .. '+\\par')
-}
-
-\clearpage
-
 \directlua{
   require('statementCollator.lua')
-  debug.printdirtree(lfs.currentdir())
+  printAll(lfs.currentdir() .. '/' .. 'Fragesammlung')
 }
+
+%\scriptsize
+%
+%\directlua{
+%  tex.sprint('\\verb+' .. lfs.currentdir() .. '+\\par')
+%}
+%
+%\clearpage
+%
+%\directlua{
+%  require('statementCollator.lua')
+%  debug.printdirtree(lfs.currentdir())
+%}
 
 \end{document}
 % ==================================================================
