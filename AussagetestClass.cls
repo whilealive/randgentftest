@@ -2,7 +2,7 @@
 % FILE     AussagetestClass.cls
 % INFO     
 %
-% DATE     01.11.2021
+% DATE     02.05.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -20,6 +20,7 @@
 \RequirePackage[ngerman]{babel}
 \RequirePackage[babel=true]{microtype}
 
+\RequirePackage{amsfonts}
 \RequirePackage{mathtools}
 \RequirePackage[makeroom]{cancel}
 
