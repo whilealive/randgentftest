@@ -208,6 +208,8 @@ function printAll(dir)
     end
   end
 
+  table.sort(filenames)
+
     --tex.sprint("\\input " .. filenames[1] .. " " .. "\\par")
     --tex.sprint("\\input " .. filenames[2] .. " " .. "\\par")
     --tex.sprint("\\input " .. filenames[3] .. " " .. "\\par")
