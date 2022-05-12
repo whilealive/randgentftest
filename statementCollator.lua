@@ -135,6 +135,8 @@ local function changePathsToUnixStyle(tbl)
 end
 
 
+-- TODO: merge printStatements() and printSolutions() - they have too many identical parts
+--
 function printStatements(tbl)
   if currentOS() == "Windows" then 
     changePathsToUnixStyle(tbl) 
@@ -190,6 +192,8 @@ end
 --end
 
 
+-- TODO: - print solutions too
+-- 
 function printAll(dir)
   local regex = ".*/([^/]+)$"
   if currentOS() == "Windows" then 
@@ -217,7 +221,8 @@ function printAll(dir)
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #filenames do
     tex.sprint("\\item\\input " .. filenames[i] .. " \\par")
-    tex.sprint("\\verb+" .. filenames[i] .. "+\\par")
+    tex.sprint("{\\footnotesize " .. "\\verb+" .. filenames[i] .. "+}\\par")
+    --tex.sprint("\\verb+" .. string.gsub(filenames[i], currentdir.."/", "") .. "+\\par")
   end
   tex.sprint("\\end{checklist}")
 
