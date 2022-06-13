@@ -2,9 +2,13 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     25.04.2022
+-- DATE     13.06.2022
 -- OWNER    Bischofberger
 -- ==================================================================
+
+
+trueStatementsDir  = "01-wahr/"
+falseStatementsDir = "02-falsch/"
 
 
 -- OS checker
@@ -100,8 +104,8 @@ end
 
 
 function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
-  local trueDir  = dir.."01-wahr/"
-  local falseDir = dir.."02-falsch/"
+  local trueDir  = dir .. trueStatementsDir 
+  local falseDir = dir .. falseStatementsDir 
 
   local filenamesTrue=collectValidFiles(trueDir)
   local filenamesFalse=collectValidFiles(falseDir)
@@ -158,11 +162,11 @@ function printSolutions(tbl)
   tex.sprint("\\section*{Lösungen}")
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
+    local boxtype = ""
     if tbl[i].answer then
-      tex.sprint("\\item[\\checkedbox]\\input " .. tbl[i].dir .. tbl[i].filename .. " \\par")
-    else
-      tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " \\par")
+      boxtype = "[\\checkedbox]"
     end
+    tex.sprint("\\item" .. boxtype .. "\\input " .. tbl[i].dir .. tbl[i].filename .. " \\par")
   end
   tex.sprint("\\end{checklist}")
 end
@@ -192,8 +196,8 @@ end
 --end
 
 
--- TODO: - print solutions too
--- 
+-- TODO: optional parameter opt_printpath
+--
 function printAll(dir)
   local regex = ".*/([^/]+)$"
   if currentOS() == "Windows" then 
@@ -218,13 +222,17 @@ function printAll(dir)
     --tex.sprint("\\input " .. filenames[2] .. " " .. "\\par")
     --tex.sprint("\\input " .. filenames[3] .. " " .. "\\par")
   
-  tex.sprint("\\begin{checklist}\\par")
-  for i = 1, #filenames do
-    tex.sprint("\\item\\input " .. filenames[i] .. " \\par")
-    tex.sprint("{\\footnotesize " .. "\\verb+" .. filenames[i] .. "+}\\par")
-    --tex.sprint("\\verb+" .. string.gsub(filenames[i], currentdir.."/", "") .. "+\\par")
-  end
-  tex.sprint("\\end{checklist}")
+    tex.sprint("\\begin{checklist}\\par")
+    for i = 1, #filenames do
+      local boxtype = ""
+      if string.find(filenames[i], trueStatementsDir, 1, true) then
+        boxtype = "[\\checkedbox]"
+      end
+      tex.sprint("\\item" .. boxtype .. "\\input " .. filenames[i] .. " \\par")
+      tex.sprint("{\\footnotesize " .. "\\verb+" .. filenames[i] .. "+}\\par")
+      --tex.sprint("\\verb+" .. string.gsub(filenames[i], currentdir.."/", "") .. "+\\par")
+    end
+    tex.sprint("\\end{checklist}")
 
   --for i = 1, #filenames do
   --  tex.sprint("\\verb+" .. filenames[i] .. "+\\par")
