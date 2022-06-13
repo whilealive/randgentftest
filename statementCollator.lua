@@ -196,9 +196,9 @@ end
 --end
 
 
--- TODO: optional parameter opt_printpath
---
-function printAll(dir)
+function printAll(--[[required]]dir, --[[optional]]opt_printpath)
+  local opt_printpath = (opt_printpath ~= false)  -- default is true
+
   local regex = ".*/([^/]+)$"
   if currentOS() == "Windows" then 
     regex = ".*\\([^/]+)$"
@@ -229,7 +229,9 @@ function printAll(dir)
         boxtype = "[\\checkedbox]"
       end
       tex.sprint("\\item" .. boxtype .. "\\input " .. filenames[i] .. " \\par")
-      tex.sprint("{\\footnotesize " .. "\\verb+" .. filenames[i] .. "+}\\par")
+      if opt_printpath then
+        tex.sprint("{\\footnotesize " .. "\\verb+" .. filenames[i] .. "+}\\par")
+      end
       --tex.sprint("\\verb+" .. string.gsub(filenames[i], currentdir.."/", "") .. "+\\par")
     end
     tex.sprint("\\end{checklist}")
