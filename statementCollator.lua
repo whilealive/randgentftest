@@ -228,9 +228,9 @@ function printAll(--[[required]]dir, --[[optional]]opt_printpath)
       if string.find(filenames[i], trueStatementsDir, 1, true) then
         boxtype = "[\\checkedbox]"
       end
-      tex.sprint("\\item" .. boxtype .. "\\input " .. filenames[i] .. " \\par")
+      tex.sprint("\\item" .. boxtype .. "\\input " .. filenames[i] .. " \\vskip 1ex")
       if opt_printpath then
-        tex.sprint("{\\footnotesize " .. "\\verb+" .. filenames[i] .. "+}\\par")
+        tex.sprint("\\begin{minipage}{\\linewidth}\\footnotesize\\verb+" .. filenames[i] .. "+\\end{minipage}\\par")
       end
       --tex.sprint("\\verb+" .. string.gsub(filenames[i], currentdir.."/", "") .. "+\\par")
     end
