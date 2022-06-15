@@ -2,7 +2,7 @@
 % FILE     AussagetestClass.cls
 % INFO     
 %
-% DATE     02.05.2022
+% DATE     15.06.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -52,11 +52,9 @@
   \end{tikzpicture}%
   }%
 \newlist{checklist}{itemize}{2}
-\setlist[checklist,1,2]{label=\checkbox,leftmargin=*,nosep,align=left,itemsep=1ex}
+\setlist[checklist,1,2]{label=\checkbox,leftmargin=*,nosep,align=left,itemsep=4ex}
 
 \RequirePackage{pgfplots}
 \pgfplotsset{compat=newest}
 \pgfplotsset{axis lines=center,axis line style={-Latex}}
-
-%\RequirePackage{luacode}
 
