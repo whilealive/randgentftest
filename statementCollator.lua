@@ -74,9 +74,6 @@ end
 
 
 local function isValidTexFile(filename)
-  --if filename:match("_QuickCompile") then
-  --  return false
-  --end
   if GetFileExtension(filename) ~= ".tex" then
     return false
   end
@@ -90,16 +87,16 @@ local function collectValidFiles(dir)
     regex = ".*\\([^/]+)$"
   end
 
-  local filenames = {}
+  local fnlist = {}
 
   for i in dirtree(dir) do
-    local filename = i:gsub(regex,"%1")
-    if isValidTexFile(filename) then
-      table.insert(filenames, filename)
+    local fn = i:gsub(regex,"%1")
+    if isValidTexFile(fn) then
+      table.insert(fnlist, fn)
     end
   end
 
-  return filenames
+  return fnlist
 end
 
 
@@ -107,28 +104,28 @@ function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
   local trueDir  = dir .. trueStatementsDir 
   local falseDir = dir .. falseStatementsDir 
 
-  local filenamesTrue=collectValidFiles(trueDir)
-  local filenamesFalse=collectValidFiles(falseDir)
+  local fnlistTrue  = collectValidFiles(trueDir)
+  local fnlistFalse = collectValidFiles(falseDir)
 
-  if numberOfTrueStatements > #filenamesTrue or numberOfFalseStatements > #filenamesFalse then
+  if numberOfTrueStatements > #fnlistTrue or numberOfFalseStatements > #fnlistFalse then
     tex.error("number of chosen statements is higher than what we have in the folder")
     return {}
   end
 
-  local filenamesMixed = {}
+  local fnlistMixed = {}
 
   for i = 1, numberOfTrueStatements do
-    local fn = table.remove(filenamesTrue, math.random(#filenamesTrue))
-    table.insert(filenamesMixed, {filename = fn, answer = true, dir=trueDir})
+    local fn = table.remove(fnlistTrue, math.random(#fnlistTrue))
+    table.insert(fnlistMixed, {filename = fn, answer = true, dir=trueDir})
   end
   for i = 1, numberOfFalseStatements do
-    local fn = table.remove(filenamesFalse, math.random(#filenamesFalse))
-    table.insert(filenamesMixed, {filename = fn, answer = false, dir=falseDir})
+    local fn = table.remove(fnlistFalse, math.random(#fnlistFalse))
+    table.insert(fnlistMixed, {filename = fn, answer = false, dir=falseDir})
   end
 
-  shuffle(filenamesMixed)
+  shuffle(fnlistMixed)
 
-  return filenamesMixed
+  return fnlistMixed
 end
 
 
