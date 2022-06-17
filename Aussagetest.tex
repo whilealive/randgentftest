@@ -11,6 +11,8 @@
 % ------------------
 % Optionen:
 % ------------------
+\newcommand*{\Sammelordner}{Fragesammlung}
+
 \newcommand*{\Oberthema}{01-Algebra}
 %\newcommand*{\Oberthema}{02-Potenzrechnen}
 %\newcommand*{\Oberthema}{03-Lineare-Gleichungen}
@@ -50,7 +52,7 @@ Kreuzen Sie alle wahren Aussagen an.
 
   local sep = getPathSeparator()
 
-  local mixedstatements = collateStatements(lfs.currentdir() .. sep .. 'Fragesammlung' .. sep .. '\Oberthema' .. sep , \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
+  local mixedstatements = collateStatements(lfs.currentdir() .. sep .. '\Sammelordner' .. sep .. '\Oberthema' .. sep , \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
 
   printStatements(mixedstatements)
   printSolutions(mixedstatements)

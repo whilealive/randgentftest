@@ -46,7 +46,7 @@ end
 -- reference: http://lua-users.org/wiki/DirTreeIterator
 local function dirtree(dir)
   local sep = getPathSeparator()
-  
+
   if string.sub(dir, -1) == sep then
     dir=string.sub(dir, 1, -2)
   end
@@ -55,11 +55,11 @@ local function dirtree(dir)
     for entry in lfs.dir(dir) do
       if not entry:match("^%.") then
         entry = dir .. sep .. entry
-          if lfs.isdir(entry) then
-            yieldtree(entry)
-          else
-            coroutine.yield(entry)
-          end
+        if lfs.isdir(entry) then
+          yieldtree(entry)
+        else
+          coroutine.yield(entry)
+        end
       end
     end
   end
@@ -68,13 +68,13 @@ local function dirtree(dir)
 end
 
 
-local function GetFileExtension(filename)
-  return filename:match("^.+(%..+)$")
+local function GetFileExtension(fn)
+  return fn:match("^.+(%..+)$")
 end
 
 
-local function isValidTexFile(filename)
-  if GetFileExtension(filename) ~= ".tex" then
+local function isValidTexFile(fn)
+  if GetFileExtension(fn) ~= ".tex" then
     return false
   end
   return true
@@ -82,18 +82,16 @@ end
 
 
 local function collectValidFiles(dir)
-  local regex = ".*/([^/]+)$"
-  if currentOS() == "Windows" then 
-    regex = ".*\\([^/]+)$"
-  end
-
   local fnlist = {}
 
-  for i in dirtree(dir) do
-    local fn = i:gsub(regex,"%1")
+  for fn in dirtree(dir) do
     if isValidTexFile(fn) then
       table.insert(fnlist, fn)
     end
+  end
+
+  if currentOS() == "Windows" then 
+    changePathsToUnixStyle(fnlist) 
   end
 
   return fnlist
@@ -116,11 +114,11 @@ function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
 
   for i = 1, numberOfTrueStatements do
     local fn = table.remove(fnlistTrue, math.random(#fnlistTrue))
-    table.insert(fnlistMixed, {filename = fn, answer = true, dir=trueDir})
+    table.insert(fnlistMixed, fn)
   end
   for i = 1, numberOfFalseStatements do
     local fn = table.remove(fnlistFalse, math.random(#fnlistFalse))
-    table.insert(fnlistMixed, {filename = fn, answer = false, dir=falseDir})
+    table.insert(fnlistMixed, fn)
   end
 
   shuffle(fnlistMixed)
@@ -131,114 +129,53 @@ end
 
 local function changePathsToUnixStyle(tbl)
   for i = 1, #tbl do
-    tbl[i].dir = string.gsub(tbl[i].dir, '\\', '/')
+    tbl[i] = string.gsub(tbl[i], '\\', '/')
   end
 end
 
 
--- TODO: merge printStatements() and printSolutions() - they have too many identical parts
---
-function printStatements(tbl)
-  if currentOS() == "Windows" then 
-    changePathsToUnixStyle(tbl) 
+function getCheckboxtype(fn)
+  local boxtype = ""
+  if string.find(fn, trueStatementsDir, 1, true) then
+    boxtype = "[\\checkedbox]"
   end
+  return boxtype
+end
+
+
+function printStatements(tbl)
 
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
-    tex.sprint("\\item\\input " .. tbl[i].dir .. tbl[i].filename .. " \\par")
+    tex.sprint("\\item\\input " .. tbl[i] .. " \\par")
   end
   tex.sprint("\\end{checklist}\\clearpage")
 end
 
 
-function printSolutions(tbl)
-  if currentOS() == "Windows" then 
-    changePathsToUnixStyle(tbl) 
-  end
-
+function printSolutions(--[[required]]tbl, --[[optional]]opt_printpath)
   tex.sprint("\\section*{Lösungen}")
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
-    local boxtype = ""
-    if tbl[i].answer then
-      boxtype = "[\\checkedbox]"
+    local boxtype = getCheckboxtype(tbl[i])
+    tex.sprint("\\item" .. boxtype .. "\\input " .. tbl[i] .. " \\par")
+    if opt_printpath then
+      tex.sprint("\\begin{minipage}{\\linewidth}\\footnotesize\\verb+" .. tbl[i] .. "+\\end{minipage}\\par")
     end
-    tex.sprint("\\item" .. boxtype .. "\\input " .. tbl[i].dir .. tbl[i].filename .. " \\par")
   end
   tex.sprint("\\end{checklist}")
 end
 
 
---local escape_lua_pattern
---do
---  local matches =
---  {
---    ["^"] = "%^";
---    ["$"] = "%$";
---    ["("] = "%(";
---    [")"] = "%)";
---    ["%"] = "%%";
---    ["."] = "%.";
---    ["["] = "%[";
---    ["]"] = "%]";
---    ["*"] = "%*";
---    ["+"] = "%+";
---    ["-"] = "%-";
---    ["?"] = "%?";
---  }
---
---  escape_lua_pattern = function(s)
---    return (s:gsub(".", matches))
---  end
---end
-
-
 function printAll(--[[required]]dir, --[[optional]]opt_printpath)
-  local opt_printpath = (opt_printpath ~= false)  -- default is true
+  local fnlist = collectValidFiles(dir)
 
-  local regex = ".*/([^/]+)$"
-  if currentOS() == "Windows" then 
-    regex = ".*\\([^/]+)$"
-  end
+  table.sort(fnlist)
 
-  local filenames = {}
-  --local currentdir = escape_lua_pattern(lfs.currentdir())
-
-  for fn in dirtree(dir) do
-    local fnonly = fn:gsub(regex,"%1")
-    if isValidTexFile(fnonly) then
-      --local fnnpath = string.gsub(fn, currentdir.."/", "")
-      --table.insert(filenames, fnnpath)
-      table.insert(filenames, fn)
-    end
-  end
-
-  table.sort(filenames)
-
-    --tex.sprint("\\input " .. filenames[1] .. " " .. "\\par")
-    --tex.sprint("\\input " .. filenames[2] .. " " .. "\\par")
-    --tex.sprint("\\input " .. filenames[3] .. " " .. "\\par")
-  
-    tex.sprint("\\begin{checklist}\\par")
-    for i = 1, #filenames do
-      local boxtype = ""
-      if string.find(filenames[i], trueStatementsDir, 1, true) then
-        boxtype = "[\\checkedbox]"
-      end
-      tex.sprint("\\item" .. boxtype .. "\\input " .. filenames[i] .. " \\vskip 1ex")
-      if opt_printpath then
-        tex.sprint("\\begin{minipage}{\\linewidth}\\footnotesize\\verb+" .. filenames[i] .. "+\\end{minipage}\\par")
-      end
-      --tex.sprint("\\verb+" .. string.gsub(filenames[i], currentdir.."/", "") .. "+\\par")
-    end
-    tex.sprint("\\end{checklist}")
-
-  --for i = 1, #filenames do
-  --  tex.sprint("\\verb+" .. filenames[i] .. "+\\par")
-  --end
-  --tex.sprint("\\verb+" .. lfs.currentdir() .. "+\\par")
-  --tex.sprint("\\verb+" .. blah .. "+\\par")
+  printSolutions(fnlist, opt_printpath)
 end
+
+
 
 
 

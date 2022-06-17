@@ -2,7 +2,7 @@
 % FILE     AussagetestDebug.tex
 % INFO     -
 %
-% DATE     13.06.2022
+% DATE     17.06.2022
 % OWNER    Bischofberger
 % ==================================================================
 
@@ -19,7 +19,10 @@
 
 \directlua{
   require('statementCollator.lua')
-  printAll(lfs.currentdir() .. '/' .. 'Fragesammlung', true)
+
+  local sep = getPathSeparator()
+
+  printAll(lfs.currentdir() .. sep .. 'Fragesammlung', true)
 }
 
 
