@@ -2,7 +2,7 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     13.06.2022
+-- DATE     19.06.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -81,6 +81,13 @@ local function isValidTexFile(fn)
 end
 
 
+local function changePathsToUnixStyle(tbl)
+  for i = 1, #tbl do
+    tbl[i] = string.gsub(tbl[i], '\\', '/')
+  end
+end
+
+
 local function collectValidFiles(dir)
   local fnlist = {}
 
@@ -127,14 +134,7 @@ function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
 end
 
 
-local function changePathsToUnixStyle(tbl)
-  for i = 1, #tbl do
-    tbl[i] = string.gsub(tbl[i], '\\', '/')
-  end
-end
-
-
-function getCheckboxtype(fn)
+local function getCheckboxtype(fn)
   local boxtype = ""
   if string.find(fn, trueStatementsDir, 1, true) then
     boxtype = "[\\checkedbox]"
