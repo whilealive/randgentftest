@@ -2,7 +2,7 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     19.06.2022
+-- DATE     22.06.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -154,7 +154,7 @@ end
 
 
 function printSolutions(--[[required]]tbl, --[[optional]]opt_printpath)
-  tex.sprint("\\section*{Lösungen}")
+  tex.sprint("\\section*{Lösungen}")  -- TODO: diese Zeile sollte bei Verwendung innerhalb PrintAll() nicht kommen
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
     local boxtype = getCheckboxtype(tbl[i])
@@ -163,7 +163,7 @@ function printSolutions(--[[required]]tbl, --[[optional]]opt_printpath)
       tex.sprint("\\begin{minipage}{\\linewidth}\\footnotesize\\verb+" .. tbl[i] .. "+\\end{minipage}\\par")
     end
   end
-  tex.sprint("\\end{checklist}")
+  tex.sprint("\\end{checklist}\\clearpage")
 end
 
 
