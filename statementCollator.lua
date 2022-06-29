@@ -147,7 +147,7 @@ function printStatements(tbl)
 
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
-    tex.sprint("\\item\\input{\"" .. tbl[i] .. "\"} \\par")
+    tex.sprint("\\item\\input{\\dq " .. tbl[i] .. "\\dq} \\par")
   end
   tex.sprint("\\end{checklist}\\clearpage")
 end
@@ -158,7 +158,7 @@ function printSolutions(--[[required]]tbl, --[[optional]]opt_printpath)
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
     local boxtype = getCheckboxtype(tbl[i])
-    tex.sprint("\\item" .. boxtype .. "\\input{\"" .. tbl[i] .. "\"} \\par")
+    tex.sprint("\\item" .. boxtype .. "\\input{\\dq " .. tbl[i] .. "\\dq} \\par")
     if opt_printpath then
       tex.sprint("\\begin{minipage}{\\linewidth}\\footnotesize\\verb+" .. tbl[i] .. "+\\end{minipage}\\par")
     end
