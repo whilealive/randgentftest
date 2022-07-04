@@ -58,3 +58,80 @@
 \pgfplotsset{compat=newest}
 \pgfplotsset{axis lines=center,axis line style={-Latex}}
 
+
+
+
+% ------------------------------------------------------------------
+% variables
+\newcommand*{\Sammlungsordner}{Fragesammlung}
+\newcommand*{\Themenliste}{%
+  01-Algebra,
+  02-Potenzrechnen,
+  03-Lineare-Gleichungen,
+  04-Lineare-Gleichungssysteme,
+  05-Quadratische-Gleichungen,
+  06-Nichtlineare-Gleichungen,
+  07-Lineare-Funktionen,
+  08-Quadratische-Funktionen,
+  09-Potenzfunktionen,
+  10-Polynomfunktionen,
+  11-Exponentialfunktionen,
+  12-Datenanalyse,
+  13-Wahrscheinlichkeitsrechnen,
+  14-Planimetrie-I,
+  15-Planimetrie-II,
+  16-Trigonometrie-I,
+  17-Trigonometrie-II,
+  18-Stereometrie,
+  19-Vektorgeometrie,
+}%
+
+% ------------------------------------------------------------------
+
+\newif\ifPrintSolutions
+
+\pgfkeys
+{%
+  aussagetest/.is family, /aussagetest,
+  default/.style={solutions=true},
+  solutions/.is if=PrintSolutions,
+}%
+
+
+% args: #1: options, #2: number of true statements, #3: number of false statements
+% possible options: solutions=false (default: true)
+%                    ...
+% TODO: write more compact, how to pass boolean to lua? (luakeys package?)
+\newcommand*{\CreateStatementTest}[3][]
+{%
+  \pgfkeys{/aussagetest, default, #1}%
+  \ifPrintSolutions
+    \directlua{%
+      require('statementCollator.lua')
+      local sep = getPathSeparator()
+      local dirlist = csvsplit('\Themenliste')
+      addprepoststring(dirlist, lfs.currentdir() .. sep .. '\Sammlungsordner' .. sep, sep)
+      local mixedstatements = collateStatements(dirlist, #2, #3)
+      printStatements(mixedstatements)
+      printSolutions(mixedstatements, true)
+    }%
+  \else
+    \directlua{%
+      require('statementCollator.lua')
+      local sep = getPathSeparator()
+      local dirlist = csvsplit('\Themenliste')
+      addprepoststring(dirlist, lfs.currentdir() .. sep .. '\Sammlungsordner' .. sep, sep)
+      local mixedstatements = collateStatements(dirlist, #2, #3)
+      printStatements(mixedstatements)
+    }%
+  \fi
+}%
+
+\newcommand*{\PrintEntireLibrary}
+{%
+  \directlua{%
+    require('statementCollator.lua')
+    local sep = getPathSeparator()
+    printAll(lfs.currentdir() .. sep .. '\Sammlungsordner', true)
+  }%
+}%

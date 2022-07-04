@@ -8,10 +8,13 @@
 
 \documentclass{AussagetestClass}
 
-% Ordnerstruktur: Fragesammlung/01-Algebra/ ...
-\newcommand*{\Sammelordner}{Fragesammlung}
+% Ordnerstruktur: 
+% Fragesammlung/01-Algebra/
+% Fragesammlung/02-Lineare-Gleichungen/
+% ...
+\renewcommand*{\Sammlungsordner}{Fragesammlung}
 
-\newcommand{\Themenliste}{%
+\renewcommand*{\Themenliste}{%
   01-Algebra,
   02-Potenzrechnen,
   %03-Lineare-Gleichungen,
@@ -33,37 +36,11 @@
   %19-Vektorgeometrie,
 }%
 
-\newcommand*{\AnzahlWahreAussagen}{3}
-\newcommand*{\AnzahlFalscheAussagen}{5}
-
-
 % ==================================================================
 \begin{document}
 
-\directlua{
-  require('statementCollator.lua')
-
-  % -----------------------------------------------------------------
-  % Dieser Teil erstellt die zufallsgenerierten Tests
-
-  local sep = getPathSeparator()
-  local dirlist = csvsplit('\Themenliste')
-  addprepoststring(dirlist, lfs.currentdir() .. sep .. '\Sammelordner' .. sep, sep)
-
-  local mixedstatements = collateStatements(dirlist, \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
-
-  printStatements(mixedstatements)
-  printSolutions(mixedstatements, true)
-
-  % -----------------------------------------------------------------
-  % Dieser Teil erstellt eine Zusammenfassung aller vorhandenen Aussagen
-
-  printAll(lfs.currentdir() .. sep .. '\Sammelordner', true)
-
-  % -----------------------------------------------------------------
-}
-
-%\tikz \foreach \fd in \Themenliste \draw (0,0) node {$\fd$};
+%\PrintEntireLibrary
+\CreateStatementTest[solutions=false]{3}{5}
 
 \end{document}
 % ==================================================================
