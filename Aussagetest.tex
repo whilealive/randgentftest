@@ -8,68 +8,48 @@
 
 \documentclass{AussagetestClass}
 
-% ------------------
-% Optionen:
-% ------------------
-\newcommand*{\Sammelordner}{Fragesammlung}
+% Erforderliche Ordnerstruktur: 
+% \Sammlungsordner/01-Algebra/
+% \Sammlungsordner/02-Lineare-Gleichungen/
+% \Sammlungsordner/03-Lineare-Gleichungssysteme/
+% ...
 
-\newcommand*{\Oberthema}{01-Algebra}
-%\newcommand*{\Oberthema}{02-Potenzrechnen}
-%\newcommand*{\Oberthema}{03-Lineare-Gleichungen}
-%\newcommand*{\Oberthema}{04-Lineare-Gleichungssysteme}
-%\newcommand*{\Oberthema}{05-Quadratische-Gleichungen}
-%\newcommand*{\Oberthema}{06-Nichtlineare-Gleichungen}
-%\newcommand*{\Oberthema}{07-Lineare-Funktionen}
-%\newcommand*{\Oberthema}{08-Quadratische-Funktionen}
-%\newcommand*{\Oberthema}{09-Potenzfunktionen}
-%\newcommand*{\Oberthema}{10-Polynomfunktionen}
-%\newcommand*{\Oberthema}{11-Exponentialfunktionen}
-%\newcommand*{\Oberthema}{12-Datenanalyse}
-%\newcommand*{\Oberthema}{13-Wahrscheinlichkeitsrechnen}
-%\newcommand*{\Oberthema}{14-Planimetrie-I}    % Dreiecke/Vierecke
-%\newcommand*{\Oberthema}{15-Planimetrie-II}   % Kreis, Bogenmass, Ähnlichkeit
-%\newcommand*{\Oberthema}{16-Trigonometrie-I}  % am rechtwinkligen Dreieck
-%\newcommand*{\Oberthema}{17-Trigonometrie-II} % am allgemeinen Dreieck, Einheitskreis, Graphen
-%\newcommand*{\Oberthema}{18-Stereometrie}
-%\newcommand*{\Oberthema}{19-Vektorgeometrie}
+\renewcommand*{\Sammlungsordner}{Fragesammlung}
 
-\newcommand*{\AnzahlWahreAussagen}{3}
-\newcommand*{\AnzahlFalscheAussagen}{5}
+% Alle unkommentierten (aktiven) Ordner werden berücksichtigt.
+\renewcommand*{\Themenliste}{%
+  01-Algebra,
+  %02-Potenzrechnen,
+  %03-Lineare-Gleichungen,
+  %04-Lineare-Gleichungssysteme,
+  %05-Quadratische-Gleichungen,
+  %06-Nichtlineare-Gleichungen,
+  %07-Lineare-Funktionen,
+  %08-Quadratische-Funktionen,
+  %09-Potenzfunktionen,
+  %10-Polynomfunktionen,
+  %11-Exponentialfunktionen,
+  %12-Datenanalyse,
+  %13-Wahrscheinlichkeitsrechnen,
+  %14-Planimetrie-I,
+  %15-Planimetrie-II,
+  %16-Trigonometrie-I,
+  17-Trigonometrie-II,
+  %18-Stereometrie,
+  %19-Vektorgeometrie,
+}%
 
+% Abkürzungen für diverse Ausrichtungen
+% Aktiviere z.B. \TALSGLF, um nur die relevanten Themen für die GLF-Prüfung zu berücksichtigen.
+%\TALSGLF
+%\TALSSPF
 
 % ==================================================================
 \begin{document}
 
-%\section*{Aussagetest, \Oberthema}
-\section*{Aussagetest, Algebra}
-Kreuzen Sie alle wahren Aussagen an.
+\CreateStatementTest[solutions=true, file paths=false]{3}{5}
 
-\vskip\baselineskip
-%\clearpage
-
-\directlua{
-  require('statementCollator.lua')
-  local sep = getPathSeparator()
-
-  % -----------------------------------------------------------------
-  % Dieser Teil erstellt die zufallsgenerierten Tests
-
-  % TODO: replace by stuff from AussagetestDebug.tex
-  local dirlist = { lfs.currentdir() .. sep .. '\Sammelordner' .. sep .. '\Oberthema' .. sep }
-
-  local mixedstatements = collateStatements(dirlist, \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
-
-  printChecklist(mixedstatements)
-  printCheckedChecklist(mixedstatements, false)
-
-  % -----------------------------------------------------------------
-  % Dieser Teil erstellt eine Zusammenfassung aller vorhandenen Aussagen
-
-  printAll(lfs.currentdir() .. sep .. '\Sammelordner', true)
-
-  % -----------------------------------------------------------------
-}
+\PrintEntireLibrary
 
 \end{document}
 % ==================================================================
-
