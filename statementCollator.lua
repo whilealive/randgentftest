@@ -23,7 +23,7 @@ local function currentOS()
 end
 
 
-function csvsplit(str)
+local function csvsplit(str)
   local strlist = {}
   for token in string.gmatch(str, "([^,]+),%s*") do
     table.insert(strlist, token)
@@ -32,7 +32,7 @@ function csvsplit(str)
 end
 
 
-function addprepoststring(strlist, prestring, poststring)
+local function addprepoststring(strlist, prestring, poststring)
   for i = 1, #strlist do
     strlist[i] = prestring .. strlist[i] .. poststring
   end
@@ -50,7 +50,7 @@ local function shuffle(tbl)
 end
 
 
-function getPathSeparator()
+local function getPathSeparator()
   local sep = "/"
   if currentOS() == "Windows" then 
     sep = "\\"
@@ -118,9 +118,7 @@ local function collectValidFiles(dir, fnlist)
 end
 
 
--- statt dir, wird dirlist übergeben, dann
--- for dir in dirlist do ...
-function collateStatements(dirlist, numberOfTrueStatements, numberOfFalseStatements)
+local function collateStatements(dirlist, numberOfTrueStatements, numberOfFalseStatements)
   local fnlistTrue  = {}
   local fnlistFalse = {}
 
@@ -160,8 +158,7 @@ local function getCheckboxtype(fn)
 end
 
 
-function printStatements(tbl)
-
+local function printChecklist(tbl)
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
     tex.sprint("\\item\\input{\\dq " .. tbl[i] .. "\\dq} \\par")
@@ -170,7 +167,7 @@ function printStatements(tbl)
 end
 
 
-function printSolutions(--[[required]]tbl, --[[optional]]opt_printpath)
+local function printCheckedChecklist(--[[required]]tbl, --[[optional]]opt_printpath)
   tex.sprint("\\section*{Lösungen}")  -- TODO: diese Zeile sollte bei Verwendung innerhalb PrintAll() nicht kommen
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
@@ -184,15 +181,46 @@ function printSolutions(--[[required]]tbl, --[[optional]]opt_printpath)
 end
 
 
-function printAll(--[[required]]dir, --[[optional]]opt_printpath)
+
+-- --------------------------------------------
+-- global functions - to be called from outside
+-- --------------------------------------------
+
+-- global: to be called from outside
+-- main routine for printing random generated tests
+function createRandGenTest(parentdir, subdirstr, numberOfTrueStatements, numberOfFalseStatements, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
+
+  -- subdirstr is a comma separated list of subfolders of parentdir
+  -- we have to split them into a lua table
+  local dirlist = csvsplit(subdirstr)
+
+  -- complete all dir paths to absolute paths
+  local sep = getPathSeparator()
+  addprepoststring(dirlist, lfs.currentdir()..sep..parentdir..sep, sep)
+
+  -- create a randomly collated statement list
+  local mixedstatementlist = collateStatements(dirlist, numberOfTrueStatements, numberOfFalseStatements)
+
+  printChecklist(mixedstatementlist)
+
+  if bool_printSolutions then
+    printCheckedChecklist(mixedstatementlist, bool_printFilePaths)
+  end
+end
+
+
+-- global: to be called from outside
+-- main routine to print the entire library
+function printAll(--[[required]]parentdir, --[[optional]]opt_printpath)
   local fnlist = {}
-  collectValidFiles(dir, fnlist)
+
+  local sep = getPathSeparator()
+  collectValidFiles(lfs.currentdir()..sep..parentdir, fnlist)
 
   table.sort(fnlist)
 
-  printSolutions(fnlist, opt_printpath)
+  printCheckedChecklist(fnlist, opt_printpath)
 end
-
 
 
 

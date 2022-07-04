@@ -2,21 +2,24 @@
 % FILE     AussagetestDebug.tex
 % INFO     -
 %
-% DATE     17.06.2022
+% DATE     04.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 
 \documentclass{AussagetestClass}
 
-% Ordnerstruktur: 
-% Fragesammlung/01-Algebra/
-% Fragesammlung/02-Lineare-Gleichungen/
+% Erforderliche Ordnerstruktur: 
+% \Sammlungsordner/01-Algebra/
+% \Sammlungsordner/02-Lineare-Gleichungen/
+% \Sammlungsordner/03-Lineare-Gleichungssysteme/
 % ...
+
 \renewcommand*{\Sammlungsordner}{Fragesammlung}
 
+% Alle unkommentierten (aktiven) Ordner werden berücksichtigt.
 \renewcommand*{\Themenliste}{%
   01-Algebra,
-  02-Potenzrechnen,
+  %02-Potenzrechnen,
   %03-Lineare-Gleichungen,
   %04-Lineare-Gleichungssysteme,
   %05-Quadratische-Gleichungen,
@@ -36,11 +39,17 @@
   %19-Vektorgeometrie,
 }%
 
+% Abkürzungen für diverse Ausrichtungen
+% Aktiviere z.B. \TALSGLF, um nur die relevanten Themen für die GLF-Prüfung zu berücksichtigen.
+%\TALSGLF
+%\TALSSPF
+
 % ==================================================================
 \begin{document}
 
-%\PrintEntireLibrary
-\CreateStatementTest[solutions=false]{3}{5}
+\CreateStatementTest[solutions=true, file paths=false]{3}{5}
+
+\PrintEntireLibrary
 
 \end{document}
 % ==================================================================

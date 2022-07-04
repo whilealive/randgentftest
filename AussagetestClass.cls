@@ -2,7 +2,7 @@
 % FILE     AussagetestClass.cls
 % INFO     
 %
-% DATE     15.06.2022
+% DATE     04.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -59,12 +59,14 @@
 \pgfplotsset{axis lines=center,axis line style={-Latex}}
 
 
-
-
 % ------------------------------------------------------------------
-% variables
+% wrapping the lua stuff...
+
 \newcommand*{\Sammlungsordner}{Fragesammlung}
-\newcommand*{\Themenliste}{%
+
+% set default: all folders
+\newcommand*{\Themenliste}
+{%
   01-Algebra,
   02-Potenzrechnen,
   03-Lineare-Gleichungen,
@@ -86,52 +88,80 @@
   19-Vektorgeometrie,
 }%
 
-% ------------------------------------------------------------------
+% shortcut for TALS GLF content
+\newcommand*{\TALSGLF}
+{%
+  \renewcommand*{\Themenliste}
+  {%
+    01-Algebra,
+    03-Lineare-Gleichungen,
+    04-Lineare-Gleichungssysteme,
+    05-Quadratische-Gleichungen,
+    07-Lineare-Funktionen,
+    08-Quadratische-Funktionen,
+    12-Datenanalyse,
+    14-Planimetrie-I,
+    15-Planimetrie-II,
+    16-Trigonometrie-I,
+    17-Trigonometrie-II,
+  }%
+}
+
+% shortcut for TALS SPF content
+\newcommand*{\TALSSPF}
+{%
+  \renewcommand*{\Themenliste}
+  {%
+    02-Potenzrechnen,
+    06-Nichtlineare-Gleichungen,
+    09-Potenzfunktionen,
+    10-Polynomfunktionen,
+    11-Exponentialfunktionen,
+    18-Stereometrie,
+    19-Vektorgeometrie,
+  }%
+}
+
 
 \newif\ifPrintSolutions
+\newif\ifPrintFilePaths
 
 \pgfkeys
 {%
   aussagetest/.is family, /aussagetest,
-  default/.style={solutions=true},
-  solutions/.is if=PrintSolutions,
+  default/.style={solutions=true, file paths=false},
+  solutions/.is   if=PrintSolutions,
+  file paths/.is  if=PrintFilePaths,
 }%
 
 
-% args: #1: options, #2: number of true statements, #3: number of false statements
-% possible options: solutions=false (default: true)
-%                    ...
-% TODO: write more compact, how to pass boolean to lua? (luakeys package?)
+% args: #1: options (optional), #2: number of true statements, #3: number of false statements
+% options:  solutions=false   (default: true)
+%           print paths=true  (default: false)
 \newcommand*{\CreateStatementTest}[3][]
 {%
   \pgfkeys{/aussagetest, default, #1}%
-  \ifPrintSolutions
-    \directlua{%
-      require('statementCollator.lua')
-      local sep = getPathSeparator()
-      local dirlist = csvsplit('\Themenliste')
-      addprepoststring(dirlist, lfs.currentdir() .. sep .. '\Sammlungsordner' .. sep, sep)
-      local mixedstatements = collateStatements(dirlist, #2, #3)
-      printStatements(mixedstatements)
-      printSolutions(mixedstatements, true)
-    }%
-  \else
-    \directlua{%
-      require('statementCollator.lua')
-      local sep = getPathSeparator()
-      local dirlist = csvsplit('\Themenliste')
-      addprepoststring(dirlist, lfs.currentdir() .. sep .. '\Sammlungsordner' .. sep, sep)
-      local mixedstatements = collateStatements(dirlist, #2, #3)
-      printStatements(mixedstatements)
-    }%
-  \fi
+  \directlua{%
+    require('statementCollator.lua')
+    \ifPrintSolutions  
+      \ifPrintFilePaths
+        createRandGenTest('\Sammlungsordner', '\Themenliste', #2, #3, true, true)
+      \else
+        createRandGenTest('\Sammlungsordner', '\Themenliste', #2, #3, true, false)
+      \fi
+    \else  % no solutions
+      createRandGenTest('\Sammlungsordner', '\Themenliste', #2, #3)
+    \fi
+  }%
 }%
+
 
 \newcommand*{\PrintEntireLibrary}
 {%
   \directlua{%
     require('statementCollator.lua')
-    local sep = getPathSeparator()
-    printAll(lfs.currentdir() .. sep .. '\Sammlungsordner', true)
+    printAll('\Sammlungsordner', true)
   }%
 }%
+
+% ------------------------------------------------------------------
