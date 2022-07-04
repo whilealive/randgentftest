@@ -2,11 +2,12 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     29.06.2022
+-- DATE     04.07.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
 
+-- TODO: diese müssen von aussen manipulierbar sein
 trueStatementsDir  = "01-wahr/"
 falseStatementsDir = "02-falsch/"
 
@@ -18,6 +19,22 @@ local function currentOS()
   if     sep == "/"  then return "LinuxOrMac"
   elseif sep == "\\" then return "Windows"
   else                    return "Other"
+  end
+end
+
+
+function csvsplit(str)
+  local strlist = {}
+  for token in string.gmatch(str, "([^,]+),%s*") do
+    table.insert(strlist, token)
+  end
+  return strlist
+end
+
+
+function addprepoststring(strlist, prestring, poststring)
+  for i = 1, #strlist do
+    strlist[i] = prestring .. strlist[i] .. poststring
   end
 end
 
@@ -88,9 +105,7 @@ local function changePathsToUnixStyle(tbl)
 end
 
 
-local function collectValidFiles(dir)
-  local fnlist = {}
-
+local function collectValidFiles(dir, fnlist)
   for fn in dirtree(dir) do
     if isValidTexFile(fn) then
       table.insert(fnlist, fn)
@@ -100,17 +115,19 @@ local function collectValidFiles(dir)
   if currentOS() == "Windows" then 
     changePathsToUnixStyle(fnlist) 
   end
-
-  return fnlist
 end
 
 
-function collateStatements(dir, numberOfTrueStatements, numberOfFalseStatements)
-  local trueDir  = dir .. trueStatementsDir 
-  local falseDir = dir .. falseStatementsDir 
+-- statt dir, wird dirlist übergeben, dann
+-- for dir in dirlist do ...
+function collateStatements(dirlist, numberOfTrueStatements, numberOfFalseStatements)
+  local fnlistTrue  = {}
+  local fnlistFalse = {}
 
-  local fnlistTrue  = collectValidFiles(trueDir)
-  local fnlistFalse = collectValidFiles(falseDir)
+  for i = 1, #dirlist do
+    collectValidFiles(dirlist[i] .. trueStatementsDir,  fnlistTrue)
+    collectValidFiles(dirlist[i] .. falseStatementsDir, fnlistFalse)
+  end
 
   if numberOfTrueStatements > #fnlistTrue or numberOfFalseStatements > #fnlistFalse then
     tex.error("number of chosen statements is higher than what we have in the folder")
@@ -168,7 +185,8 @@ end
 
 
 function printAll(--[[required]]dir, --[[optional]]opt_printpath)
-  local fnlist = collectValidFiles(dir)
+  local fnlist = {}
+  collectValidFiles(dir, fnlist)
 
   table.sort(fnlist)
 
@@ -203,5 +221,13 @@ function debug.printInputFilenames(tbl)
   end
   for i = 1, #tbl do
     tex.sprint("\\verb+" .. tbl[i].dir .. tbl[i].filename .. "+\\par")
+  end
+end
+
+
+function debug.csvsplit(str)
+  local strlist = csvsplit(str);
+  for i = 1, #strlist do
+    tex.sprint(strlist[i] .. "\\par")
   end
 end

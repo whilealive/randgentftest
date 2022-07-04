@@ -8,7 +8,30 @@
 
 \documentclass{AussagetestClass}
 
-\newcommand*{\Oberthema}{01-Algebra}
+% Ordnerstruktur: Fragesammlung/01-Algebra/ ...
+\newcommand*{\Sammelordner}{Fragesammlung}
+
+\newcommand{\Themenliste}{%
+  01-Algebra,
+  02-Potenzrechnen,
+  %03-Lineare-Gleichungen,
+  %04-Lineare-Gleichungssysteme,
+  %05-Quadratische-Gleichungen,
+  %06-Nichtlineare-Gleichungen,
+  %07-Lineare-Funktionen,
+  %08-Quadratische-Funktionen,
+  %09-Potenzfunktionen,
+  %10-Polynomfunktionen,
+  %11-Exponentialfunktionen,
+  %12-Datenanalyse,
+  %13-Wahrscheinlichkeitsrechnen,
+  %14-Planimetrie-I,
+  %15-Planimetrie-II,
+  %16-Trigonometrie-I,
+  17-Trigonometrie-II,
+  %18-Stereometrie,
+  %19-Vektorgeometrie,
+}%
 
 \newcommand*{\AnzahlWahreAussagen}{3}
 \newcommand*{\AnzahlFalscheAussagen}{5}
@@ -20,24 +43,27 @@
 \directlua{
   require('statementCollator.lua')
 
-  local sep = getPathSeparator()
+  % -----------------------------------------------------------------
+  % Dieser Teil erstellt die zufallsgenerierten Tests
 
-  printAll(lfs.currentdir() .. sep .. 'Fragesammlung', true)
+  local sep = getPathSeparator()
+  local dirlist = csvsplit('\Themenliste')
+  addprepoststring(dirlist, lfs.currentdir() .. sep .. '\Sammelordner' .. sep, sep)
+
+  local mixedstatements = collateStatements(dirlist, \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
+
+  printStatements(mixedstatements)
+  printSolutions(mixedstatements, true)
+
+  % -----------------------------------------------------------------
+  % Dieser Teil erstellt eine Zusammenfassung aller vorhandenen Aussagen
+
+  printAll(lfs.currentdir() .. sep .. '\Sammelordner', true)
+
+  % -----------------------------------------------------------------
 }
 
-
-%\scriptsize
-%
-%\directlua{
-%  tex.sprint('\\verb+' .. lfs.currentdir() .. '+\\par')
-%}
-%
-%\clearpage
-%
-%\directlua{
-%  require('statementCollator.lua')
-%  debug.printdirtree(lfs.currentdir())
-%}
+%\tikz \foreach \fd in \Themenliste \draw (0,0) node {$\fd$};
 
 \end{document}
 % ==================================================================

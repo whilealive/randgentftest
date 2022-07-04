@@ -2,7 +2,7 @@
 % FILE     Aussagetest.tex
 % INFO     -
 %
-% DATE     01.07.2022
+% DATE     04.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 
@@ -54,7 +54,10 @@ Kreuzen Sie alle wahren Aussagen an.
   % -----------------------------------------------------------------
   % Dieser Teil erstellt die zufallsgenerierten Tests
 
-  local mixedstatements = collateStatements(lfs.currentdir() .. sep .. '\Sammelordner' .. sep .. '\Oberthema' .. sep , \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
+  % TODO: replace by stuff from AussagetestDebug.tex
+  local dirlist = { lfs.currentdir() .. sep .. '\Sammelordner' .. sep .. '\Oberthema' .. sep }
+
+  local mixedstatements = collateStatements(dirlist, \AnzahlWahreAussagen, \AnzahlFalscheAussagen)
 
   printStatements(mixedstatements)
   printSolutions(mixedstatements, false)
