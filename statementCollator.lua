@@ -35,6 +35,15 @@ local function currentOS()
 end
 
 
+local function getPathSeparator()
+  local sep = "/"
+  if currentOS() == "Windows" then
+    sep = "\\"
+  end
+  return sep
+end
+
+
 local function csvsplit(str)
   local strlist = {}
   for token in string.gmatch(str, "([^,]+),%s*") do
@@ -44,10 +53,18 @@ local function csvsplit(str)
 end
 
 
-local function addprepoststring(strlist, prestring, poststring)
-  for i = 1, #strlist do
-    strlist[i] = prestring .. strlist[i] .. poststring
+local function completePaths(parentdir, subdirstr)
+  -- subdirstr is a comma separated list of subfolders of parentdir
+  local dirlist = csvsplit(subdirstr)
+
+  -- complete all dir paths with currentdir/parendir to absolute paths
+  local sep = getPathSeparator()
+
+  for i = 1, #dirlist do
+    dirlist[i] = lfs.currentdir() .. sep .. parentdir .. sep .. dirlist[i] .. sep
   end
+
+  return dirlist
 end
 
 
@@ -59,15 +76,6 @@ local function shuffle(tbl)
     tbl[i], tbl[j] = tbl[j], tbl[i]
   end
   --return tbl
-end
-
-
-local function getPathSeparator()
-  local sep = "/"
-  if currentOS() == "Windows" then 
-    sep = "\\"
-  end
-  return sep
 end
 
 
@@ -202,13 +210,8 @@ end
 -- main routine for printing random generated tests
 function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrueStatements, numberOfFalseStatements, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
 
-  -- subdirstr is a comma separated list of subfolders of parentdir
-  -- we have to split them into a lua table
-  local dirlist = csvsplit(subdirstr)
-
-  -- complete all dir paths to absolute paths
-  local sep = getPathSeparator()
-  addprepoststring(dirlist, lfs.currentdir()..sep..parentdir..sep, sep)
+  -- fill a list of absolute paths to all subfolders
+  local dirlist = completePaths(parentdir, subdirstr)
 
   -- set names of true/false subfolders
   setTrueFalseDir(trueDir, falseDir)
