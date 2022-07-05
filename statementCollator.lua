@@ -7,9 +7,13 @@
 -- ==================================================================
 
 
--- TODO: diese müssen von aussen manipulierbar sein
 trueStatementsDir  = "01-wahr/"
 falseStatementsDir = "02-falsch/"
+
+local function setTrueFalseDir(nameOfTrueDir, nameOfFalseDir)
+  trueStatementsDir  = nameOfTrueDir
+  falseStatementsDir = nameOfFalseDir
+end
 
 
 -- OS checker
@@ -188,7 +192,7 @@ end
 
 -- global: to be called from outside
 -- main routine for printing random generated tests
-function createRandGenTest(parentdir, subdirstr, numberOfTrueStatements, numberOfFalseStatements, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
+function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrueStatements, numberOfFalseStatements, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
 
   -- subdirstr is a comma separated list of subfolders of parentdir
   -- we have to split them into a lua table
@@ -197,6 +201,9 @@ function createRandGenTest(parentdir, subdirstr, numberOfTrueStatements, numberO
   -- complete all dir paths to absolute paths
   local sep = getPathSeparator()
   addprepoststring(dirlist, lfs.currentdir()..sep..parentdir..sep, sep)
+
+  -- set names of true/false subfolders
+  setTrueFalseDir(trueDir, falseDir)
 
   -- create a randomly collated statement list
   local mixedstatementlist = collateStatements(dirlist, numberOfTrueStatements, numberOfFalseStatements)

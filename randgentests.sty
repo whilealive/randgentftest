@@ -93,6 +93,9 @@
   }%
 }
 
+\newcommand*{\WahreAussagen}{01-wahr/}
+\newcommand*{\FalscheAussagen}{02-falsch/}
+
 
 \newif\ifPrintSolutions
 \newif\ifPrintFilePaths
@@ -115,12 +118,12 @@
     require('statementCollator.lua')
     \ifPrintSolutions  
       \ifPrintFilePaths
-        createRandGenTest('\Sammlungsordner', '\Themenliste', #2, #3, true, true)
+        createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3, true, true)
       \else
-        createRandGenTest('\Sammlungsordner', '\Themenliste', #2, #3, true, false)
+        createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3, true, false)
       \fi
     \else  % no solutions
-      createRandGenTest('\Sammlungsordner', '\Themenliste', #2, #3)
+      createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3)
     \fi
   }%
 }%
