@@ -2,17 +2,25 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     04.07.2022
+-- DATE     05.07.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
 
+-- set global true/false subfolders
 trueStatementsDir  = "01-wahr/"
 falseStatementsDir = "02-falsch/"
 
 local function setTrueFalseDir(nameOfTrueDir, nameOfFalseDir)
   trueStatementsDir  = nameOfTrueDir
   falseStatementsDir = nameOfFalseDir
+  -- we really need the "/" at the end here (OS-independent)
+  if string.sub(trueStatementsDir, -1) ~= "/" then
+    trueStatementsDir = trueStatementsDir .. "/"
+  end
+  if string.sub(falseStatementsDir, -1) ~= "/" then
+    falseStatementsDir = falseStatementsDir .. "/"
+  end
 end
 
 
