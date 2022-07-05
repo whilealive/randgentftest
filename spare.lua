@@ -47,3 +47,13 @@ function printAll(dir)
   end
   tex.sprint("\\end{checklist}")
 end
+
+
+
+
+-- Erforderliche Ordnerstruktur: 
+-- \Sammlungsordner/01-Algebra/
+-- \Sammlungsordner/02-Lineare-Gleichungen/
+-- \Sammlungsordner/03-Lineare-Gleichungssysteme/
+-- ...
+

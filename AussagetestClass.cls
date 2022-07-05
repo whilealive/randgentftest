@@ -2,7 +2,7 @@
 % FILE     AussagetestClass.cls
 % INFO     
 %
-% DATE     04.07.2022
+% DATE     05.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -16,7 +16,7 @@
 \ProvidesClass{AussagetestClass}
 
 \LoadClass[10pt]{article}
-\RequirePackage[a4paper,textwidth=160mm,top=30mm,bottom=40mm]{geometry}  % extra wide
+\RequirePackage[a4paper,textwidth=160mm,top=30mm,bottom=40mm]{geometry}
 \RequirePackage[ngerman]{babel}
 \RequirePackage[babel=true]{microtype}
 
@@ -42,126 +42,7 @@
 \usetikzlibrary{calc,angles,intersections,arrows.meta}
 \tikzset{>={Latex}}
 
-\RequirePackage[inline]{enumitem}
-\newcommand*{\checkbox}{\tikz\draw (0,0) rectangle (.25,.25);}
-\newcommand*{\checkedbox}{%
-  \begin{tikzpicture}%
-  \draw (0,0) rectangle (.25,.25);%
-  \draw (0,0) -- (.25,.25);%
-  \draw (.25,0) -- (0,.25);%
-  \end{tikzpicture}%
-  }%
-\newlist{checklist}{itemize}{2}
-\setlist[checklist,1,2]{label=\checkbox,leftmargin=*,nosep,align=left,itemsep=4ex}
-
 \RequirePackage{pgfplots}
 \pgfplotsset{compat=newest}
 \pgfplotsset{axis lines=center,axis line style={-Latex}}
 
-
-% ------------------------------------------------------------------
-% wrapping the lua stuff...
-
-\newcommand*{\Sammlungsordner}{Fragesammlung}
-
-% set default: all folders
-\newcommand*{\Themenliste}
-{%
-  01-Algebra,
-  02-Potenzrechnen,
-  03-Lineare-Gleichungen,
-  04-Lineare-Gleichungssysteme,
-  05-Quadratische-Gleichungen,
-  06-Nichtlineare-Gleichungen,
-  07-Lineare-Funktionen,
-  08-Quadratische-Funktionen,
-  09-Potenzfunktionen,
-  10-Polynomfunktionen,
-  11-Exponentialfunktionen,
-  12-Datenanalyse,
-  13-Wahrscheinlichkeitsrechnen,
-  14-Planimetrie-I,
-  15-Planimetrie-II,
-  16-Trigonometrie-I,
-  17-Trigonometrie-II,
-  18-Stereometrie,
-  19-Vektorgeometrie,
-}%
-
-% shortcut for TALS GLF content
-\newcommand*{\TALSGLF}
-{%
-  \renewcommand*{\Themenliste}
-  {%
-    01-Algebra,
-    03-Lineare-Gleichungen,
-    04-Lineare-Gleichungssysteme,
-    05-Quadratische-Gleichungen,
-    07-Lineare-Funktionen,
-    08-Quadratische-Funktionen,
-    12-Datenanalyse,
-    14-Planimetrie-I,
-    15-Planimetrie-II,
-    16-Trigonometrie-I,
-    17-Trigonometrie-II,
-  }%
-}
-
-% shortcut for TALS SPF content
-\newcommand*{\TALSSPF}
-{%
-  \renewcommand*{\Themenliste}
-  {%
-    02-Potenzrechnen,
-    06-Nichtlineare-Gleichungen,
-    09-Potenzfunktionen,
-    10-Polynomfunktionen,
-    11-Exponentialfunktionen,
-    18-Stereometrie,
-    19-Vektorgeometrie,
-  }%
-}
-
-
-\newif\ifPrintSolutions
-\newif\ifPrintFilePaths
-
-\pgfkeys
-{%
-  aussagetest/.is family, /aussagetest,
-  default/.style={solutions=true, file paths=false},
-  solutions/.is   if=PrintSolutions,
-  file paths/.is  if=PrintFilePaths,
-}%
-
-
-% args: #1: options (optional), #2: number of true statements, #3: number of false statements
-% options:  solutions=false   (default: true)
-%           print paths=true  (default: false)
-\newcommand*{\CreateStatementTest}[3][]
-{%
-  \pgfkeys{/aussagetest, default, #1}%
-  \directlua{%
-    require('statementCollator.lua')
-    \ifPrintSolutions  
-      \ifPrintFilePaths
-        createRandGenTest('\Sammlungsordner', '\Themenliste', #2, #3, true, true)
-      \else
-        createRandGenTest('\Sammlungsordner', '\Themenliste', #2, #3, true, false)
-      \fi
-    \else  % no solutions
-      createRandGenTest('\Sammlungsordner', '\Themenliste', #2, #3)
-    \fi
-  }%
-}%
-
-
-\newcommand*{\PrintEntireLibrary}
-{%
-  \directlua{%
-    require('statementCollator.lua')
-    printAll('\Sammlungsordner', true)
-  }%
-}%
-
-% ------------------------------------------------------------------
