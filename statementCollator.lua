@@ -2,26 +2,9 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     05.07.2022
+-- DATE     06.07.2022
 -- OWNER    Bischofberger
 -- ==================================================================
-
-
--- set global true/false subfolders
-trueStatementsDir  = "01-wahr/"
-falseStatementsDir = "02-falsch/"
-
-local function setTrueFalseDir(nameOfTrueDir, nameOfFalseDir)
-  trueStatementsDir  = nameOfTrueDir
-  falseStatementsDir = nameOfFalseDir
-  -- we really need the "/" at the end here (OS-independent)
-  if string.sub(trueStatementsDir, -1) ~= "/" then
-    trueStatementsDir = trueStatementsDir .. "/"
-  end
-  if string.sub(falseStatementsDir, -1) ~= "/" then
-    falseStatementsDir = falseStatementsDir .. "/"
-  end
-end
 
 
 -- OS checker
@@ -35,7 +18,9 @@ local function currentOS()
 end
 
 
-local function getPathSeparator()
+-- unix like: parentfolder/subfolder
+-- windows:   parentfolder\subfolder
+local function getfolderpathseparator()
   local sep = "/"
   if currentOS() == "Windows" then
     sep = "\\"
@@ -58,7 +43,7 @@ local function completePaths(parentdir, subdirstr)
   local dirlist = csvsplit(subdirstr)
 
   -- complete all dir paths with currentdir/parendir to absolute paths
-  local sep = getPathSeparator()
+  local sep = getfolderpathseparator()
 
   for i = 1, #dirlist do
     dirlist[i] = lfs.currentdir() .. sep .. parentdir .. sep .. dirlist[i] .. sep
@@ -68,21 +53,28 @@ local function completePaths(parentdir, subdirstr)
 end
 
 
--- Fisher-Yates shuffle
--- reference: https://gist.github.com/Uradamus/10323382
-local function shuffle(tbl)
-  for i = #tbl, 2, -1 do
-    local j = math.random(i)
-    tbl[i], tbl[j] = tbl[j], tbl[i]
+-- set global true/false subfolders
+trueStatementsDir  = "01-wahr/"
+falseStatementsDir = "02-falsch/"
+
+local function setTrueFalseDir(nameOfTrueDir, nameOfFalseDir)
+  trueStatementsDir  = nameOfTrueDir
+  falseStatementsDir = nameOfFalseDir
+  -- we really need the "/" at the end here (OS-independent)
+  -- since the LaTeX input mechanism uses /-separators only 
+  if string.sub(trueStatementsDir, -1) ~= "/" then
+    trueStatementsDir = trueStatementsDir .. "/"
   end
-  --return tbl
+  if string.sub(falseStatementsDir, -1) ~= "/" then
+    falseStatementsDir = falseStatementsDir .. "/"
+  end
 end
 
 
 -- dirtree iterator
 -- reference: http://lua-users.org/wiki/DirTreeIterator
 local function dirtree(dir)
-  local sep = getPathSeparator()
+  local sep = getfolderpathseparator()
 
   if string.sub(dir, -1) == sep then
     dir=string.sub(dir, 1, -2)
@@ -118,6 +110,10 @@ local function isValidTexFile(fn)
 end
 
 
+-- Folders in paths from lua's LuaFileSystem (lfs) library are
+-- separated by the OS-specific separator / or \.
+-- LaTeX's input macro uses /-separators only, so we have to
+-- convert paths from OS-dependent to LaTeX internal style.
 local function changePathsToUnixStyle(tbl)
   for i = 1, #tbl do
     tbl[i] = string.gsub(tbl[i], '\\', '/')
@@ -135,6 +131,17 @@ local function collectValidFiles(dir, fnlist)
   if currentOS() == "Windows" then 
     changePathsToUnixStyle(fnlist) 
   end
+end
+
+
+-- Fisher-Yates shuffle
+-- reference: https://gist.github.com/Uradamus/10323382
+local function shuffle(tbl)
+  for i = #tbl, 2, -1 do
+    local j = math.random(i)
+    tbl[i], tbl[j] = tbl[j], tbl[i]
+  end
+  --return tbl
 end
 
 
@@ -232,7 +239,7 @@ end
 function printAll(--[[required]]parentdir, --[[optional]]opt_printpath)
   local fnlist = {}
 
-  local sep = getPathSeparator()
+  local sep = getfolderpathseparator()
   collectValidFiles(lfs.currentdir()..sep..parentdir, fnlist)
 
   table.sort(fnlist)
