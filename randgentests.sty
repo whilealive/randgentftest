@@ -21,9 +21,9 @@
 \newcommand*{\checkbox}{\tikz\draw (0,0) rectangle (.25,.25);}
 \newcommand*{\checkedbox}{%
   \begin{tikzpicture}%
-  \draw (0,0) rectangle (.25,.25);%
-  \draw (0,0) -- (.25,.25);%
-  \draw (.25,0) -- (0,.25);%
+    \draw (0,0) rectangle (.25,.25);%
+    \draw (0,0) -- (.25,.25);%
+    \draw (.25,0) -- (0,.25);%
   \end{tikzpicture}%
   }%
 \newlist{checklist}{itemize}{2}
@@ -93,8 +93,12 @@
   }%
 }
 
+
 \newcommand*{\WahreAussagen}{01-wahr}
 \newcommand*{\FalscheAussagen}{02-falsch}
+
+
+\newcommand*{\Filterlist}{}
 
 
 \newif\ifPrintSolutions

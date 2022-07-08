@@ -38,6 +38,13 @@ local function csvsplit(str)
 end
 
 
+-- split key=value pairs
+local function keyvaluesplit(pair)
+  local key, val = string.match(pair, "([%a%s]+)%s*=%s*([%a%s]+)")
+  return key, val
+end
+
+
 local function completePaths(parentdir, subdirstr)
   -- subdirstr is a comma separated list of subfolders of parentdir
   local dirlist = csvsplit(subdirstr)
@@ -208,6 +215,17 @@ local function printCheckedChecklist(--[[required]]tbl, --[[optional]]opt_printp
 end
 
 
+local function getfilterlist(filterstr)
+  local filterlist = {}
+  local templist = csvsplit(filterstr)
+  for i = 1, #templist do
+    local k, v = keyvaluesplit(templist[i])
+    table.insert(filterlist, {key=k, value=v})
+  end
+  return filterlist
+end
+
+
 
 -- --------------------------------------------
 -- global functions - to be called from outside
@@ -215,7 +233,7 @@ end
 
 -- global: to be called from outside
 -- main routine for printing random generated tests
-function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrueStatements, numberOfFalseStatements, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
+function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrueStatements, numberOfFalseStatements, filterlist, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
 
   -- fill a list of absolute paths to all subfolders
   local dirlist = completePaths(parentdir, subdirstr)
@@ -225,6 +243,8 @@ function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrue
 
   -- create a randomly collated statement list
   local mixedstatementlist = collateStatements(dirlist, numberOfTrueStatements, numberOfFalseStatements)
+
+  -- TODO: filter here...
 
   printChecklist(mixedstatementlist)
 
@@ -267,20 +287,17 @@ function debug.printdirtree(dir)
   end
 end
 
-
-function debug.printInputFilenames(tbl)
-  if currentOS() == "Windows" then 
-    changePathsToUnixStyle(tbl) 
-  end
-  for i = 1, #tbl do
-    tex.sprint("\\verb+" .. tbl[i].dir .. tbl[i].filename .. "+\\par")
-  end
-end
-
-
 function debug.csvsplit(str)
   local strlist = csvsplit(str);
   for i = 1, #strlist do
     tex.sprint(strlist[i] .. "\\par")
+  end
+end
+
+function debug.printfilterlist(str)
+  local filterlist = getfilterlist(str)
+  for i = 1, #filterlist do
+    tex.sprint("key= " .. filterlist[i].key .. "\\par")
+    tex.sprint("value= " .. filterlist[i].value .. "\\par")
   end
 end

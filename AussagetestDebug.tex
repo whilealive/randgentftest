@@ -43,13 +43,24 @@
 %\TALSGLF
 %\TALSSPF
 
+\renewcommand*{\Filterlist}
+{%
+  VERFASSER=Bruno Bischofberger,
+  AUSRICHTUNG=alle,
+}%
+
 
 % ==================================================================
 \begin{document}
 
-\CreateStatementTest[solutions=true, file paths=false]{3}{5}
+%\CreateStatementTest[solutions=true, file paths=false]{3}{5}
 
-\PrintEntireLibrary
+%\PrintEntireLibrary
+
+\directlua{%
+  require('statementCollator.lua')
+  debug.printfilterlist('\Filterlist')
+}
 
 \end{document}
 % ==================================================================
