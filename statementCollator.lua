@@ -23,8 +23,8 @@ local function tableisempty(tbl)
 end
 
 
-function extend(t1, t2)
-    return table.move(t2, 1, #t2, #t1 + 1, t1)
+function extend(tbl1, tbl2)
+    return table.move(tbl2, 1, #tbl2, #tbl1 + 1, tbl1)
 end
 
 
@@ -39,6 +39,12 @@ local function getfolderpathseparator()
 end
 
 
+local function strtrim(str)
+  str = string.gsub(str, "^%s*(.-)%s*$", "%1")
+  return str
+end
+
+
 -- generic string split function
 local function strsplit(str, sep)
   local strlist = {}
@@ -50,10 +56,8 @@ end
 
 
 -- split string on a comma
--- FIXME: last word after comma must be included!
---        blah, blah, BLAH
 local function csvsplit(str)
-  return strsplit(str, "([^,]+),%s*")
+  return strsplit(strtrim(str), "([^,]+),?%s*")
 end
 
 
@@ -387,7 +391,7 @@ end
 function debug.csvsplit(str)
   local strlist = csvsplit(str);
   for i = 1, #strlist do
-    tex.sprint(strlist[i] .. "\\par")
+    tex.sprint("|" .. strlist[i] .. "|\\par")
   end
 end
 
