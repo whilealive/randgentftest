@@ -23,6 +23,11 @@ local function tableisempty(tbl)
 end
 
 
+function extend(t1, t2)
+    return table.move(t2, 1, #t2, #t1 + 1, t1)
+end
+
+
 -- unix like: parentfolder/subfolder
 -- windows:   parentfolder\subfolder
 local function getfolderpathseparator()
@@ -125,16 +130,13 @@ local function dirtree(dir)
 end
 
 
-local function GetFileExtension(fn)
+local function getfileextension(fn)
   return fn:match("^.+(%..+)$")
 end
 
 
 local function isValidTeXFile(fn)
-  if GetFileExtension(fn) ~= ".tex" then
-    return false
-  end
-  return true
+  return getfileextension(fn) == ".tex"
 end
 
 
@@ -149,7 +151,9 @@ local function changePathsToUnixStyle(tbl)
 end
 
 
-local function listTeXfiles(dir, fnlist)
+local function listTeXfiles(dir)
+  local fnlist = {}
+
   for fn in dirtree(dir) do
     if isValidTeXFile(fn) then
       table.insert(fnlist, fn)
@@ -159,6 +163,8 @@ local function listTeXfiles(dir, fnlist)
   if currentOS() == "Windows" then 
     changePathsToUnixStyle(fnlist) 
   end
+
+  return fnlist
 end
 
 
@@ -222,6 +228,8 @@ end
 local function readfile(path)
   local file = assert(io.open(path, "r"))
   local str = file:read("a")
+  -- TODO: if "path" is a folder str is equal to nil
+  --       --> error handling?
   file:close()
   return str
 end
@@ -234,7 +242,6 @@ end
 
 local function fileHasKeyValue(file, key, value)
   local linelist = newlinesplit(readfile(file))
-  --debug.printFileLines(linelist)
   for i = 1, #linelist do
     if lineHasKeyValue(linelist[i], key, value) then
       return true
@@ -244,7 +251,17 @@ local function fileHasKeyValue(file, key, value)
 end
 
 
--- TODO: rewrite as generic filter function
+local function filematchesfilterlist(file, filterlist)
+  for i=1, #filterlist do
+    if not fileHasKeyValue(file, filterlist[i].key, filterlist[i].value) then
+      return false
+    end
+  end
+
+  return true
+end
+
+
 local function filter(dirlist, filterlist)
   if tableisempty(filterlist) then
     return dirlist
@@ -253,17 +270,11 @@ local function filter(dirlist, filterlist)
   local dirlist_filtered = {}
 
   for i=1, #dirlist do
-    local hasAllKeyValuePairs = true
-    for j=1, #filterlist do
-      if not fileHasKeyValue(dirlist[i], filterlist[j].key, filterlist[j].value) then
-        hasAllKeyValuePairs = false
-        break
-      end
-    end
-    if hasAllKeyValuePairs then
+    if filematchesfilterlist(dirlist[i], filterlist) then
       table.insert(dirlist_filtered, dirlist[i])
     end
   end
+
   return dirlist_filtered
 end
 
@@ -273,8 +284,8 @@ local function collateStatements(dirlist, filterlist, numberOfTrueStatements, nu
   local fnlistFalse = {}
 
   for i = 1, #dirlist do
-    listTeXfiles(dirlist[i] .. trueStatementsDir,  fnlistTrue)
-    listTeXfiles(dirlist[i] .. falseStatementsDir, fnlistFalse)
+    extend(fnlistTrue,  listTeXfiles(dirlist[i] .. trueStatementsDir,  fnlistTrue))
+    extend(fnlistFalse, listTeXfiles(dirlist[i] .. falseStatementsDir, fnlistFalse))
   end
 
   local fnlistTrue_filtered  = filter(fnlistTrue, filterlist)
@@ -342,10 +353,8 @@ end
 -- global: to be called from outside
 -- main routine to print the entire library
 function printAll(--[[required]]parentdir, --[[optional]]opt_printpath)
-  local fnlist = {}
-
   local sep = getfolderpathseparator()
-  listTeXfiles(lfs.currentdir()..sep..parentdir, fnlist)
+  local fnlist = listTeXfiles(lfs.currentdir()..sep..parentdir, fnlist)
 
   table.sort(fnlist)
 
@@ -392,9 +401,8 @@ function debug.printfilterlist(filterlist)
 end
 
 function debug.testfilechecker(parentdir)
-  local fnlist = {}
   local sep = getfolderpathseparator()
-  listTeXfiles(lfs.currentdir()..sep..parentdir, fnlist)
+  local fnlist = {} listTeXfiles(lfs.currentdir()..sep..parentdir, fnlist)
   table.sort(fnlist)
   for i = 1, #fnlist do
     if fileHasKeyValue(fnlist[i], "VERFASSER", "Bruno Bischofberger") then
