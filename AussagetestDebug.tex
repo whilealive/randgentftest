@@ -16,10 +16,11 @@
 %\renewcommand*{\Sammlungsordner}{Aussagesammlung}
 
 % Alle unkommentierten (aktiven) Ordner werden berücksichtigt.
-\renewcommand*{\Themenliste}{%
+\renewcommand*{\Themenliste}
+{%
   01-Algebra,
   02-Potenzrechnen,
-  %03-Lineare-Gleichungen,
+  03-Lineare-Gleichungen,
   %04-Lineare-Gleichungssysteme,
   %05-Quadratische-Gleichungen,
   %06-Nichtlineare-Gleichungen,
@@ -33,9 +34,10 @@
   %14-Planimetrie-I,
   %15-Planimetrie-II,
   %16-Trigonometrie-I,
-  17-Trigonometrie-II,
-  %18-Stereometrie,
+  %17-Trigonometrie-II,
+  %18 Stereometrie,
   19-Vektorgeometrie,
+  20-Privat
 }%
 
 % Abkürzungen für diverse Ausrichtungen
@@ -43,27 +45,28 @@
 %\TALSGLF
 %\TALSSPF
 
-% in den Sätzen können pro Aussage mehrere Ausrichtungen als Liste angegeben werden, z.B. TALS, DL
+% In den Sätzen können pro Aussage mehrere Ausrichtungen als Liste angegeben werden, z.B. TALS, DL
 % als Filter ist nur eine Ausrichtung anzugeben (mehrere machen auch keinen Sinn...)
 \renewcommand*{\Filterlist}
 {%
   AUTOR=Bruno Bischofberger,
-%  AUSRICHTUNG=TALS,  % hier darf nur eine Ausrichtung angegeben werden
+  AUSRICHTUNG=TALS,  % hier darf nur eine Ausrichtung angegeben werden
 }%
 
 
 % ==================================================================
 \begin{document}
 
-%blah
+blah
 
-%\CreateStatementTest[solutions=true, file paths=true]{1}{1}
+%\CreateStatementTest[solutions=true, file paths=true]{3}{5}
 
 \PrintEntireLibrary[file paths=true]
 
 %\directlua{%
 %  require('statementCollator.lua')
-%  debug.printfilterlist('\Filterlist')
+%  %debug.csvsplit('\Themenliste')
+%  debug.printfilterstring('\Filterlist')
 %  %debug.printfilterlist(nil)
 %  %debug.testfilechecker('\Sammlungsordner')
 %}

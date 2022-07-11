@@ -395,15 +395,24 @@ function debug.csvsplit(str)
   end
 end
 
---function debug.printfilterlist(str)
 function debug.printfilterlist(filterlist)
-  --local filterlist = parseTeXfilterstring(str)
   if tableisempty(filterlist) then
     tex.sprint("filter list is empty\\par")
   end
   for i = 1, #filterlist do
-    tex.sprint("key= " .. filterlist[i].key .. "\\par")
-    tex.sprint("value= " .. filterlist[i].value .. "\\par")
+    tex.sprint("key= " .. "|" .. filterlist[i].key .. "|" .. "\\par")
+    tex.sprint("value= " .. "|" .. filterlist[i].value .. "|" .. "\\par")
+  end
+end
+
+function debug.printfilterstring(str)
+  local filterlist = parseTeXfilterstring(str)
+  if tableisempty(filterlist) then
+    tex.sprint("filter list is empty\\par")
+  end
+  for i = 1, #filterlist do
+    tex.sprint("key: " .. "|" .. filterlist[i].key .. "|" .. "\\par")
+    tex.sprint("value: " .. "|" .. filterlist[i].value .. "|" .. "\\par")
   end
 end
 
