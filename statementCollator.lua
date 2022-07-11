@@ -284,8 +284,8 @@ local function collateStatements(dirlist, filterlist, numberOfTrueStatements, nu
   local fnlistFalse = {}
 
   for i = 1, #dirlist do
-    extend(fnlistTrue,  listTeXfiles(dirlist[i] .. trueStatementsDir,  fnlistTrue))
-    extend(fnlistFalse, listTeXfiles(dirlist[i] .. falseStatementsDir, fnlistFalse))
+    extend(fnlistTrue,  listTeXfiles(dirlist[i] .. trueStatementsDir))
+    extend(fnlistFalse, listTeXfiles(dirlist[i] .. falseStatementsDir))
   end
 
   local fnlistTrue_filtered  = filter(fnlistTrue, filterlist)
@@ -352,13 +352,16 @@ end
 
 -- global: to be called from outside
 -- main routine to print the entire library
-function printAll(--[[required]]parentdir, --[[optional]]opt_printpath)
+function printAll(--[[required]]parentdir, --[[required]]filterstr, --[[optional]]opt_printpath)
   local sep = getfolderpathseparator()
-  local fnlist = listTeXfiles(lfs.currentdir()..sep..parentdir, fnlist)
+  local fnlist = listTeXfiles(lfs.currentdir()..sep..parentdir)
 
-  table.sort(fnlist)
+  local filterlist = parseTeXfilterstring(filterstr)
+  local fnlist_filtered  = filter(fnlist, filterlist)
 
-  printCheckedChecklist(fnlist, opt_printpath)
+  table.sort(fnlist_filtered)
+
+  printCheckedChecklist(fnlist_filtered, opt_printpath)
 end
 
 
@@ -402,7 +405,7 @@ end
 
 function debug.testfilechecker(parentdir)
   local sep = getfolderpathseparator()
-  local fnlist = {} listTeXfiles(lfs.currentdir()..sep..parentdir, fnlist)
+  local fnlist = {} listTeXfiles(lfs.currentdir()..sep..parentdir)
   table.sort(fnlist)
   for i = 1, #fnlist do
     if fileHasKeyValue(fnlist[i], "VERFASSER", "Bruno Bischofberger") then

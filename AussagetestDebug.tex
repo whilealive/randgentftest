@@ -45,11 +45,11 @@
 
 % in den Sätzen können pro Aussage mehrere Ausrichtungen als Liste angegeben werden, z.B. TALS, DL
 % als Filter ist nur eine Ausrichtung anzugeben (mehrere machen auch keinen Sinn...)
-%\renewcommand*{\Filterlist}
-%{%
-%  VERFASSER=Bruno Bischofberger,
+\renewcommand*{\Filterlist}
+{%
+  AUTOR=Bruno Bischofberger,
 %  AUSRICHTUNG=TALS,  % hier darf nur eine Ausrichtung angegeben werden
-%}%
+}%
 
 
 % ==================================================================
@@ -57,9 +57,9 @@
 
 %blah
 
-\CreateStatementTest[solutions=true, file paths=true]{3}{5}
+%\CreateStatementTest[solutions=true, file paths=true]{1}{1}
 
-\PrintEntireLibrary
+\PrintEntireLibrary[file paths=true]
 
 %\directlua{%
 %  require('statementCollator.lua')

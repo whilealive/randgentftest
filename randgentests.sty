@@ -139,9 +139,9 @@
   \directlua{%
     require('statementCollator.lua')
     \ifPrintFilePaths  
-      printAll('\Sammlungsordner', true)
+      printAll('\Sammlungsordner', '\Filterlist', true)
     \else
-      printAll('\Sammlungsordner', false)
+      printAll('\Sammlungsordner', '\Filterlist', false)
     \fi
   }%
 }%
