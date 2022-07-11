@@ -2,7 +2,7 @@
 % FILE     randgentests.sty
 % INFO     
 %
-% DATE     05.07.2022
+% DATE     10.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -122,12 +122,12 @@
     require('statementCollator.lua')
     \ifPrintSolutions  
       \ifPrintFilePaths
-        createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3, true, true)
+        createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3, '\Filterlist', true, true)
       \else
-        createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3, true, false)
+        createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3, '\Filterlist', true, false)
       \fi
     \else  % no solutions
-      createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3)
+      createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3, '\Filterlist')
     \fi
   }%
 }%

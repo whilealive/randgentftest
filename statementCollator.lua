@@ -2,7 +2,7 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     06.07.2022
+-- DATE     11.07.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -18,6 +18,11 @@ local function currentOS()
 end
 
 
+local function tableisempty(tbl)
+  return not next(tbl)
+end
+
+
 -- unix like: parentfolder/subfolder
 -- windows:   parentfolder\subfolder
 local function getfolderpathseparator()
@@ -29,23 +34,38 @@ local function getfolderpathseparator()
 end
 
 
-local function csvsplit(str)
+-- generic string split function
+local function strsplit(str, sep)
   local strlist = {}
-  for token in string.gmatch(str, "([^,]+),%s*") do
+  for token in string.gmatch(str, sep) do
     table.insert(strlist, token)
   end
   return strlist
 end
 
 
--- split key=value pairs
+-- split string on a comma
+-- FIXME: last word after comma must be included!
+--        blah, blah, BLAH
+local function csvsplit(str)
+  return strsplit(str, "([^,]+),%s*")
+end
+
+
+-- split string on new lines
+local function newlinesplit(str)
+  return strsplit(str, "[^\n]+")
+end
+
+
+-- split "key=value" pairs
 local function keyvaluesplit(pair)
   local key, val = string.match(pair, "([%a%s]+)%s*=%s*([%a%s]+)")
   return key, val
 end
 
 
-local function completePaths(parentdir, subdirstr)
+local function parseTeXdirstring(parentdir, subdirstr)
   -- subdirstr is a comma separated list of subfolders of parentdir
   local dirlist = csvsplit(subdirstr)
 
@@ -60,6 +80,7 @@ local function completePaths(parentdir, subdirstr)
 end
 
 
+-- TODO: remove globals here!
 -- set global true/false subfolders
 trueStatementsDir  = "01-wahr/"
 falseStatementsDir = "02-falsch/"
@@ -109,7 +130,7 @@ local function GetFileExtension(fn)
 end
 
 
-local function isValidTexFile(fn)
+local function isValidTeXFile(fn)
   if GetFileExtension(fn) ~= ".tex" then
     return false
   end
@@ -128,9 +149,9 @@ local function changePathsToUnixStyle(tbl)
 end
 
 
-local function collectValidFiles(dir, fnlist)
+local function listTeXfiles(dir, fnlist)
   for fn in dirtree(dir) do
-    if isValidTexFile(fn) then
+    if isValidTeXFile(fn) then
       table.insert(fnlist, fn)
     end
   end
@@ -148,38 +169,6 @@ local function shuffle(tbl)
     local j = math.random(i)
     tbl[i], tbl[j] = tbl[j], tbl[i]
   end
-  --return tbl
-end
-
-
-local function collateStatements(dirlist, numberOfTrueStatements, numberOfFalseStatements)
-  local fnlistTrue  = {}
-  local fnlistFalse = {}
-
-  for i = 1, #dirlist do
-    collectValidFiles(dirlist[i] .. trueStatementsDir,  fnlistTrue)
-    collectValidFiles(dirlist[i] .. falseStatementsDir, fnlistFalse)
-  end
-
-  if numberOfTrueStatements > #fnlistTrue or numberOfFalseStatements > #fnlistFalse then
-    tex.error("number of chosen statements is higher than what we have in the folder")
-    return {}
-  end
-
-  local fnlistMixed = {}
-
-  for i = 1, numberOfTrueStatements do
-    local fn = table.remove(fnlistTrue, math.random(#fnlistTrue))
-    table.insert(fnlistMixed, fn)
-  end
-  for i = 1, numberOfFalseStatements do
-    local fn = table.remove(fnlistFalse, math.random(#fnlistFalse))
-    table.insert(fnlistMixed, fn)
-  end
-
-  shuffle(fnlistMixed)
-
-  return fnlistMixed
 end
 
 
@@ -215,15 +204,106 @@ local function printCheckedChecklist(--[[required]]tbl, --[[optional]]opt_printp
 end
 
 
-local function getfilterlist(filterstr)
+-- split and save LaTeX string
+-- "key1 = value1, key2 = value2, key3 = value3, ..."
+-- in a table {{key=k1, value=v1}, {key=k2, value=v2}, {key=k3, value=v3}, ...}
+local function parseTeXfilterstring(filterstr)
+  local tmplist = csvsplit(filterstr)
   local filterlist = {}
-  local templist = csvsplit(filterstr)
-  for i = 1, #templist do
-    local k, v = keyvaluesplit(templist[i])
+  for i = 1, #tmplist do
+    local k, v = keyvaluesplit(tmplist[i])
     table.insert(filterlist, {key=k, value=v})
   end
   return filterlist
 end
+
+
+-- read entire file and return as string
+local function readfile(path)
+  local file = assert(io.open(path, "r"))
+  local str = file:read("a")
+  file:close()
+  return str
+end
+
+
+local function lineHasKeyValue(str, key, value)
+  return string.find(str, key) and string.find(str, value)
+end
+
+
+local function fileHasKeyValue(file, key, value)
+  local linelist = newlinesplit(readfile(file))
+  --debug.printFileLines(linelist)
+  for i = 1, #linelist do
+    if lineHasKeyValue(linelist[i], key, value) then
+      return true
+    end
+  end
+  return false
+end
+
+
+-- TODO: rewrite as generic filter function
+local function filter(dirlist, filterlist)
+  if tableisempty(filterlist) then
+    return dirlist
+  end
+
+  local dirlist_filtered = {}
+
+  for i=1, #dirlist do
+    local hasAllKeyValuePairs = true
+    for j=1, #filterlist do
+      if not fileHasKeyValue(dirlist[i], filterlist[j].key, filterlist[j].value) then
+        hasAllKeyValuePairs = false
+        break
+      end
+    end
+    if hasAllKeyValuePairs then
+      table.insert(dirlist_filtered, dirlist[i])
+    end
+  end
+  return dirlist_filtered
+end
+
+
+local function collateStatements(dirlist, filterlist, numberOfTrueStatements, numberOfFalseStatements)
+  local fnlistTrue  = {}
+  local fnlistFalse = {}
+
+  for i = 1, #dirlist do
+    listTeXfiles(dirlist[i] .. trueStatementsDir,  fnlistTrue)
+    listTeXfiles(dirlist[i] .. falseStatementsDir, fnlistFalse)
+  end
+
+  local fnlistTrue_filtered  = filter(fnlistTrue, filterlist)
+  local fnlistFalse_filtered = filter(fnlistFalse, filterlist)
+
+  if numberOfTrueStatements > #fnlistTrue_filtered or 
+     numberOfFalseStatements > #fnlistFalse_filtered then
+    tex.error("number of chosen statements is higher than what we have in the folder")
+    return {}
+  end
+
+  local fnlistMixed_filtered = {}
+
+  for i = 1, numberOfTrueStatements do
+    local fn = table.remove(fnlistTrue_filtered, math.random(#fnlistTrue_filtered))
+    table.insert(fnlistMixed_filtered, fn)
+  end
+  for i = 1, numberOfFalseStatements do
+    local fn = table.remove(fnlistFalse_filtered, math.random(#fnlistFalse_filtered))
+    table.insert(fnlistMixed_filtered, fn)
+  end
+
+  shuffle(fnlistMixed_filtered)
+
+  return fnlistMixed_filtered
+end
+
+
+
 
 
 
@@ -233,23 +313,28 @@ end
 
 -- global: to be called from outside
 -- main routine for printing random generated tests
-function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrueStatements, numberOfFalseStatements, filterlist, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
+function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrueStatements, numberOfFalseStatements, filterstr, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
 
   -- fill a list of absolute paths to all subfolders
-  local dirlist = completePaths(parentdir, subdirstr)
+  local dirlist = parseTeXdirstring(parentdir, subdirstr)
 
   -- set names of true/false subfolders
   setTrueFalseDir(trueDir, falseDir)
 
+  local filterlist = parseTeXfilterstring(filterstr)
+
   -- create a randomly collated statement list
-  local mixedstatementlist = collateStatements(dirlist, numberOfTrueStatements, numberOfFalseStatements)
+  local fnlist_mixed_filtered = collateStatements(dirlist, filterlist, numberOfTrueStatements, numberOfFalseStatements)
 
-  -- TODO: filter here...
+  if tableisempty(fnlist_mixed_filtered) then
+    return false
+  end
 
-  printChecklist(mixedstatementlist)
+  -- TeX output
+  printChecklist(fnlist_mixed_filtered)
 
   if bool_printSolutions then
-    printCheckedChecklist(mixedstatementlist, bool_printFilePaths)
+    printCheckedChecklist(fnlist_mixed_filtered, bool_printFilePaths)
   end
 end
 
@@ -260,7 +345,7 @@ function printAll(--[[required]]parentdir, --[[optional]]opt_printpath)
   local fnlist = {}
 
   local sep = getfolderpathseparator()
-  collectValidFiles(lfs.currentdir()..sep..parentdir, fnlist)
+  listTeXfiles(lfs.currentdir()..sep..parentdir, fnlist)
 
   table.sort(fnlist)
 
@@ -294,10 +379,33 @@ function debug.csvsplit(str)
   end
 end
 
-function debug.printfilterlist(str)
-  local filterlist = getfilterlist(str)
+--function debug.printfilterlist(str)
+function debug.printfilterlist(filterlist)
+  --local filterlist = parseTeXfilterstring(str)
+  if tableisempty(filterlist) then
+    tex.sprint("filter list is empty\\par")
+  end
   for i = 1, #filterlist do
     tex.sprint("key= " .. filterlist[i].key .. "\\par")
     tex.sprint("value= " .. filterlist[i].value .. "\\par")
   end
 end
+
+function debug.testfilechecker(parentdir)
+  local fnlist = {}
+  local sep = getfolderpathseparator()
+  listTeXfiles(lfs.currentdir()..sep..parentdir, fnlist)
+  table.sort(fnlist)
+  for i = 1, #fnlist do
+    if fileHasKeyValue(fnlist[i], "VERFASSER", "Bruno Bischofberger") then
+      tex.sprint("has it:" .. "\\verb+" .. fnlist[i] .. "+\\par")
+    end
+  end
+end
+
+function debug.printFileLines(strlist)
+  for i = 1, #strlist do
+    tex.sprint(strlist[i] .. "\\par")
+  end
+end
+
