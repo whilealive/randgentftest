@@ -2,7 +2,7 @@
 % FILE     randgentests.sty
 % INFO     
 %
-% DATE     10.07.2022
+% DATE     11.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -133,11 +133,16 @@
 }%
 
 % Wrapper macro for printing all statements in parent folder in one single pdf
-\newcommand*{\PrintEntireLibrary}
+\newcommand*{\PrintEntireLibrary}[1][]
 {%
+  \pgfkeys{/aussagetest, default, #1}%
   \directlua{%
     require('statementCollator.lua')
-    printAll('\Sammlungsordner', true)
+    \ifPrintFilePaths  
+      printAll('\Sammlungsordner', true)
+    \else
+      printAll('\Sammlungsordner', false)
+    \fi
   }%
 }%
 
