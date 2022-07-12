@@ -2,7 +2,7 @@
 -- FILE     statementCollator.lua
 -- INFO     
 --
--- DATE     11.07.2022
+-- DATE     12.07.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -40,8 +40,7 @@ end
 
 
 local function strtrim(str)
-  str = string.gsub(str, "^%s*(.-)%s*$", "%1")
-  return str
+  return string.gsub(str, "^%s*(.-)%s*$", "%1")
 end
 
 
@@ -239,8 +238,16 @@ local function readfile(path)
 end
 
 
+local function nocase(str)
+  local pattern = string.gsub(str, "%a", function(c) 
+                    return "[" .. string.lower(c) .. string.upper(c) .. "]"
+                  end)
+  return pattern
+end
+
+
 local function lineHasKeyValue(str, key, value)
-  return string.find(str, key) and string.find(str, value)
+  return string.find(str, key) and string.find(str, nocase(value))
 end
 
 
