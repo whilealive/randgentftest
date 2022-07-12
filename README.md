@@ -1,2 +1,2 @@
-# randgentests
-Randomly create (true or false) tests in LuaLaTeX
+# randgentftest
+Create randomly generated true-false tests in LuaLaTeX
