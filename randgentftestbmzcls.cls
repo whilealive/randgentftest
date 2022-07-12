@@ -1,8 +1,8 @@
 % ==================================================================
-% FILE     AussagetestClass.cls
+% FILE     randgentftestbmzcls.cls
 % INFO     
 %
-% DATE     05.07.2022
+% DATE     12.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -13,7 +13,7 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
-\ProvidesClass{AussagetestClass}
+\ProvidesClass{randgentftestbmzcls}
 
 \LoadClass[10pt]{article}
 \RequirePackage[a4paper,textwidth=160mm,top=30mm,bottom=40mm]{geometry}

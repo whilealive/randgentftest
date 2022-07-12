@@ -15,29 +15,33 @@
 
 \ProvidesPackage{randgentftest}
 
+
 \RequirePackage{tikz}
+\RequirePackage[inline]{enumitem}
+
 
 % set up checklist environment
-\RequirePackage[inline]{enumitem}
 \newcommand*{\checkbox}{\tikz\draw (0,0) rectangle (.25,.25);}
-\newcommand*{\checkedbox}{%
+\newcommand*{\checkedbox}
+{%
   \begin{tikzpicture}%
     \draw (0,0) rectangle (.25,.25);%
     \draw (0,0) -- (.25,.25);%
     \draw (.25,0) -- (0,.25);%
   \end{tikzpicture}%
-  }%
+}%
 \newlist{checklist}{itemize}{2}
 \setlist[checklist,1,2]{label=\checkbox,leftmargin=*,nosep,align=left,itemsep=4ex}
 
 
 % define parent folder here
-\newcommand*{\Sammlungsordner}{Aussagesammlung}
+\newcommand*{\Collectionfolder}{Aussagesammlung}
+
 
 % define subfolders here
 % set default: all folders
 % use renewcommand to delete entries from list
-\newcommand*{\Themenliste}
+\newcommand*{\Topicfolders}
 {%
   01-Algebra,
   02-Potenzrechnen,
@@ -58,12 +62,14 @@
   17-Trigonometrie-II,
   18-Stereometrie,
   19-Vektorgeometrie,
+  20-Privat,
 }%
+
 
 % shortcut for TALS GLF content
 \newcommand*{\TALSGLF}
 {%
-  \renewcommand*{\Themenliste}
+  \renewcommand*{\Topicfolders}
   {%
     01-Algebra,
     03-Lineare-Gleichungen,
@@ -82,7 +88,7 @@
 % shortcut for TALS SPF content
 \newcommand*{\TALSSPF}
 {%
-  \renewcommand*{\Themenliste}
+  \renewcommand*{\Topicfolders}
   {%
     02-Potenzrechnen,
     06-Nichtlineare-Gleichungen,
@@ -95,8 +101,8 @@
 }
 
 
-\newcommand*{\WahreAussagen}{01-wahr}
-\newcommand*{\FalscheAussagen}{02-falsch}
+\newcommand*{\tFolder}{01-wahr}
+\newcommand*{\fFolder}{02-falsch}
 
 
 \newcommand*{\Filterlist}{}
@@ -107,7 +113,7 @@
 
 \pgfkeys
 {%
-  aussagetest/.is family, /aussagetest,
+  randgentftest/.is family, /randgentftest,
   default/.style={solutions=true, file paths=false},
   solutions/.is   if=PrintSolutions,
   file paths/.is  if=PrintFilePaths,
@@ -118,17 +124,17 @@
 %           print paths=true  (default: false)
 \newcommand*{\CreateStatementTest}[3][]
 {%
-  \pgfkeys{/aussagetest, default, #1}%
+  \pgfkeys{/randgentftest, default, #1}%
   \directlua{%
     require('randgentftest.lua')
     \ifPrintSolutions  
       \ifPrintFilePaths
-        createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3, '\Filterlist', true, true)
+        createRandGenTest('\Collectionfolder', '\Topicfolders', '\tFolder', '\fFolder', #2, #3, '\Filterlist', true, true)
       \else
-        createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3, '\Filterlist', true, false)
+        createRandGenTest('\Collectionfolder', '\Topicfolders', '\tFolder', '\fFolder', #2, #3, '\Filterlist', true, false)
       \fi
     \else  % no solutions
-      createRandGenTest('\Sammlungsordner', '\Themenliste', '\WahreAussagen', '\FalscheAussagen', #2, #3, '\Filterlist')
+      createRandGenTest('\Collectionfolder', '\Topicfolders', '\tFolder', '\fFolder', #2, #3, '\Filterlist')
     \fi
   }%
 }%
@@ -136,13 +142,13 @@
 % Wrapper macro for printing all statements in parent folder in one single pdf
 \newcommand*{\PrintEntireLibrary}[1][]
 {%
-  \pgfkeys{/aussagetest, default, #1}%
+  \pgfkeys{/randgentftest, default, #1}%
   \directlua{%
     require('randgentftest.lua')
     \ifPrintFilePaths  
-      printAll('\Sammlungsordner', '\Filterlist', true)
+      printAll('\Collectionfolder', '\Filterlist', true)
     \else
-      printAll('\Sammlungsordner', '\Filterlist', false)
+      printAll('\Collectionfolder', '\Filterlist', false)
     \fi
   }%
 }%

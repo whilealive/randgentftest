@@ -2,21 +2,21 @@
 % FILE     Aussagetest.tex
 % INFO     -
 %
-% DATE     11.07.2022
+% DATE     12.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 
-\documentclass{AussagetestClass}
+\documentclass{randgentftestbmzcls}
 
 % ------------------------------------------------------------------
 % some info here...
 \usepackage{randgentftest}
 
 % redefine parent folder here if you wish
-%\renewcommand*{\Sammlungsordner}{Aussagesammlung}
+%\renewcommand*{\Collectionfolder}{Aussagesammlung}
 
 % Alle unkommentierten (aktiven) Ordner werden berücksichtigt.
-\renewcommand*{\Themenliste}
+\renewcommand*{\Topicfolders}
 {%
   01-Algebra,
   %02-Potenzrechnen,
@@ -37,6 +37,7 @@
   17-Trigonometrie-II,
   %18-Stereometrie,
   %19-Vektorgeometrie,
+  %20-Privat,
 }%
 
 % Abkürzungen für diverse Ausrichtungen
@@ -44,16 +45,11 @@
 %\TALSGLF
 %\TALSSPF
 
-% Wünscht man andere wahr/falsch-Unterordner, können sie hier geändert werden.
-%\renewcommand*{\WahreAussagen}{01-wahr}
-%\renewcommand*{\FalscheAussagen}{02-falsch}
-
-
-\renewcommand*{\Filterlist}
-{%
-  AUTOR=Bruno Bischofberger,
-  AUSRICHTUNG=alle,
-}%
+%\renewcommand*{\Filterlist}
+%{%
+%  AUTOR=Bruno Bischofberger,
+%  AUSRICHTUNG=TALS,
+%}%
 
 
 % ==================================================================
@@ -61,7 +57,7 @@
 
 \CreateStatementTest[solutions=true, file paths=false]{3}{5}
 
-\PrintEntireLibrary
+%\PrintEntireLibrary[file paths=false]
 
 \end{document}
 % ==================================================================
