@@ -1,5 +1,5 @@
 -- ==================================================================
--- FILE     statementCollator.lua
+-- FILE     randgentftest.lua
 -- INFO     
 --
 -- DATE     12.07.2022
