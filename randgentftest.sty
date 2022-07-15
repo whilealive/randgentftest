@@ -16,21 +16,28 @@
 \ProvidesPackage{randgentftest}
 
 
-\RequirePackage{tikz}
+% TODO: use expl3 to define keys so that we don't need tikz at all here
+\RequirePackage{pgfkeys}
 \RequirePackage[inline]{enumitem}
 
 
 % set up checklist environment
-\pgfmathsetmacro{\checkboxsize}{0.24}
-\newcommand*{\checkbox}{\tikz\draw (0,0) rectangle (\checkboxsize,\checkboxsize);}
-\newcommand*{\checkedbox}
-{%
-  \begin{tikzpicture}%
-    \draw (0,0) rectangle (\checkboxsize,\checkboxsize);%
-    \draw (0,0) -- (\checkboxsize,\checkboxsize);%
-    \draw (\checkboxsize,0) -- (0,\checkboxsize);%
-  \end{tikzpicture}%
-}%
+%\RequirePackage{tikz}
+%\pgfmathsetmacro{\checkboxsize}{0.24}
+%\newcommand*{\checkbox}{\tikz\draw (0,0) rectangle (\checkboxsize,\checkboxsize);}
+%\newcommand*{\checkedbox}
+%{%
+%  \begin{tikzpicture}%
+%    \draw (0,0) rectangle (\checkboxsize,\checkboxsize);%
+%    \draw (0,0) -- (\checkboxsize,\checkboxsize);%
+%    \draw (\checkboxsize,0) -- (0,\checkboxsize);%
+%  \end{tikzpicture}%
+%}%
+
+% checkbox alternative without tikz:
+\newcommand*{\checkbox}{$\square$}
+\newcommand*{\checkedbox}{\mbox{\makebox[0pt][l]{\raisebox{0.22ex}{$\times$}}$\square$}}
+
 \newlist{checklist}{itemize}{2}
 \setlist[checklist,1,2]{label=\checkbox,left=0pt .. 1.6em,nosep,align=left,itemsep=4ex}
 
