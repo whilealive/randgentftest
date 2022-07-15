@@ -9,6 +9,7 @@
 *.fdb_latexmk
 *.jpg
 *.eps
+AussagetestDebug.tex
 Aussagesammlung/
 project/
 misc/
