@@ -16,8 +16,6 @@
 \ProvidesPackage{randgentftest}
 
 
-% TODO: use expl3 to define keys so that we don't need tikz at all here
-\RequirePackage{pgfkeys}
 \RequirePackage[inline]{enumitem}
 
 
@@ -116,48 +114,59 @@
 \newcommand*{\Filterlist}{}
 
 
-\newif\ifPrintSolutions
-\newif\ifPrintFilePaths
+\ExplSyntaxOn
 
-\pgfkeys
+% keys
+\keys_define:nn{randgentftest/print}
 {%
-  randgentftest/.is family, /randgentftest,
-  default/.style={solutions=true, file paths=false},
-  solutions/.is   if=PrintSolutions,
-  file paths/.is  if=PrintFilePaths,
+  solutions .bool_set:N = \l__print_solutions_bool,
+  filepaths .bool_set:N = \l__print_filepaths_bool,
+  solutions .value_required:n = true,
+  filepaths .value_required:n = true,
+  solutions .initial:n = {true},
+  filepaths .initial:n = {false},
 }%
 
 % args: #1: options (optional), #2: number of true statements, #3: number of false statements
-% options:  solutions=false   (default: true)
-%           print paths=true  (default: false)
-\newcommand*{\CreateStatementTest}[3][]
+% options:  solutions=false  (default: true)
+%           printpaths=true  (default: false)
+\NewDocumentCommand{\CreateStatementTest}{ o m m }
 {%
-  \pgfkeys{/randgentftest, default, #1}%
+  \IfNoValueF{#1}{\keys_set:nn{randgentftest/print}{#1}}
   \directlua{%
     require('randgentftest.lua')
-    \ifPrintSolutions  
-      \ifPrintFilePaths
+    \bool_if:NTF{\l__print_solutions_bool}
+    {%
+      \bool_if:NTF{\l__print_filepaths_bool}
+      {%
         createRandGenTest('\Collectionfolder', '\Topicfolders', '\tFolder', '\fFolder', #2, #3, '\Filterlist', true, true)
-      \else
+      }%
+      {%
         createRandGenTest('\Collectionfolder', '\Topicfolders', '\tFolder', '\fFolder', #2, #3, '\Filterlist', true, false)
-      \fi
-    \else  % no solutions
+      }%
+    }%
+    {%  no solutions
       createRandGenTest('\Collectionfolder', '\Topicfolders', '\tFolder', '\fFolder', #2, #3, '\Filterlist')
-    \fi
+    }%
   }%
 }%
 
-% Wrapper macro for printing all statements in parent folder in one single pdf
-\newcommand*{\PrintEntireLibrary}[1][]
+% args: #1: options (optional)
+% options:  printpaths=true  (default: false)
+\NewDocumentCommand{\PrintEntireLibrary}{ o }
 {%
-  \pgfkeys{/randgentftest, default, #1}%
+  \IfNoValueF{#1}{\keys_set:nn{randgentftest/print}{#1}}
   \directlua{%
     require('randgentftest.lua')
-    \ifPrintFilePaths  
+    \bool_if:NTF{\l__print_filepaths_bool}
+    {%
       printAll('\Collectionfolder', '\Filterlist', true)
-    \else
+    }%
+    {%
       printAll('\Collectionfolder', '\Filterlist', false)
-    \fi
+    }%
   }%
 }%
+
+\ExplSyntaxOff
 
