@@ -2,7 +2,7 @@
 % FILE     randgentftest.sty
 % INFO     
 %
-% DATE     12.07.2022
+% DATE     15.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -21,17 +21,18 @@
 
 
 % set up checklist environment
-\newcommand*{\checkbox}{\tikz\draw (0,0) rectangle (.25,.25);}
+\pgfmathsetmacro{\checkboxsize}{0.24}
+\newcommand*{\checkbox}{\tikz\draw (0,0) rectangle (\checkboxsize,\checkboxsize);}
 \newcommand*{\checkedbox}
 {%
   \begin{tikzpicture}%
-    \draw (0,0) rectangle (.25,.25);%
-    \draw (0,0) -- (.25,.25);%
-    \draw (.25,0) -- (0,.25);%
+    \draw (0,0) rectangle (\checkboxsize,\checkboxsize);%
+    \draw (0,0) -- (\checkboxsize,\checkboxsize);%
+    \draw (\checkboxsize,0) -- (0,\checkboxsize);%
   \end{tikzpicture}%
 }%
 \newlist{checklist}{itemize}{2}
-\setlist[checklist,1,2]{label=\checkbox,leftmargin=*,nosep,align=left,itemsep=4ex}
+\setlist[checklist,1,2]{label=\checkbox,left=0pt .. 1.6em,nosep,align=left,itemsep=4ex}
 
 
 % define parent folder here
