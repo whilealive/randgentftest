@@ -34,7 +34,7 @@
 \lhead{B\kern0.10em M\kern0.07em S Zürich}
 \rhead{\thepage}
 \cfoot{}
-\chead[]{Aussagetest}
+\chead[]{Wahr-Falsch-Test}
 
 \RequirePackage{siunitx}
 \sisetup{per-mode=symbol,exponent-product=\cdot}

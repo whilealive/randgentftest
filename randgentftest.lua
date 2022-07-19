@@ -2,7 +2,7 @@
 -- FILE     randgentftest.lua
 -- INFO     
 --
--- DATE     12.07.2022
+-- DATE     19.07.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -199,8 +199,10 @@ local function printChecklist(tbl)
 end
 
 
-local function printCheckedChecklist(--[[required]]tbl, --[[optional]]opt_printpath)
-  tex.sprint("\\section*{Lösungen}")  -- TODO: diese Zeile sollte bei Verwendung innerhalb PrintAll() nicht kommen
+local function printCheckedChecklist(--[[required]]tbl, --[[optional]]opt_printpath, --[[optional]]opt_solutions)
+  if opt_solutions then
+    tex.sprint("\\section*{Lösungen}")
+  end
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
     local boxtype = getCheckboxtype(tbl[i])
@@ -356,7 +358,7 @@ function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrue
   printChecklist(fnlist_mixed_filtered)
 
   if bool_printSolutions then
-    printCheckedChecklist(fnlist_mixed_filtered, bool_printFilePaths)
+    printCheckedChecklist(fnlist_mixed_filtered, bool_printFilePaths, true)
   end
 end
 
@@ -372,7 +374,7 @@ function printAll(--[[required]]parentdir, --[[required]]filterstr, --[[optional
 
   table.sort(fnlist_filtered)
 
-  printCheckedChecklist(fnlist_filtered, opt_printpath)
+  printCheckedChecklist(fnlist_filtered, opt_printpath, false)
 end
 
 
