@@ -2,7 +2,7 @@
 % FILE     randgentftestbmzcls.cls
 % INFO     
 %
-% DATE     12.07.2022
+% DATE     19.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -22,6 +22,7 @@
 
 \RequirePackage{amsfonts}
 \RequirePackage{mathtools}
+
 \RequirePackage[makeroom]{cancel}
 
 \setlength{\parindent}{0pt}
@@ -38,11 +39,11 @@
 \RequirePackage{siunitx}
 \sisetup{per-mode=symbol,exponent-product=\cdot}
 
-\RequirePackage{tikz}
-\usetikzlibrary{calc,angles,intersections,arrows.meta}
-\tikzset{>={Latex}}
+%\RequirePackage{tikz}
+%\usetikzlibrary{calc,angles,intersections,arrows.meta}
+%\tikzset{>={Latex}}
 
-\RequirePackage{pgfplots}
-\pgfplotsset{compat=newest}
-\pgfplotsset{axis lines=center,axis line style={-Latex}}
+%\RequirePackage{pgfplots}
+%\pgfplotsset{compat=newest}
+%\pgfplotsset{axis lines=center,axis line style={-Latex}}
 

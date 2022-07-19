@@ -2,7 +2,7 @@
 % FILE     randgentftest.sty
 % INFO     
 %
-% DATE     15.07.2022
+% DATE     18.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -16,28 +16,32 @@
 \ProvidesPackage{randgentftest}
 
 
-\RequirePackage[inline]{enumitem}
+\RequirePackage{enumitem}
 
 
-% set up checklist environment
-%\RequirePackage{tikz}
-%\pgfmathsetmacro{\checkboxsize}{0.24}
-%\newcommand*{\checkbox}{\tikz\draw (0,0) rectangle (\checkboxsize,\checkboxsize);}
-%\newcommand*{\checkedbox}
-%{%
-%  \begin{tikzpicture}%
-%    \draw (0,0) rectangle (\checkboxsize,\checkboxsize);%
-%    \draw (0,0) -- (\checkboxsize,\checkboxsize);%
-%    \draw (\checkboxsize,0) -- (0,\checkboxsize);%
-%  \end{tikzpicture}%
-%}%
-
-% checkbox alternative without tikz:
+% define checklist environment
 \newcommand*{\checkbox}{$\square$}
 \newcommand*{\checkedbox}{\mbox{\makebox[0pt][l]{\raisebox{0.22ex}{$\times$}}$\square$}}
 
+% checkbox alternative using tikz (not relying on fonts): 
+\newcommand*{\drawTikZcheckboxes}[1][0.24]
+{%
+  \RequirePackage{tikz}
+  \pgfmathsetmacro{\checkboxsize}{#1}
+  \renewcommand*{\checkbox}{\tikz\draw (0,0) rectangle (\checkboxsize,\checkboxsize);}
+  \renewcommand*{\checkedbox}
+  {%
+    \begin{tikzpicture}%
+      \draw (0,0) rectangle (\checkboxsize,\checkboxsize);%
+      \draw (0,0) -- (\checkboxsize,\checkboxsize);%
+      \draw (\checkboxsize,0) -- (0,\checkboxsize);%
+    \end{tikzpicture}%
+  }%
+}
+
 \newlist{checklist}{itemize}{2}
 \setlist[checklist,1,2]{label=\checkbox,left=0pt .. 1.6em,nosep,align=left,itemsep=4ex}
+%\setlist[checklist,1,2]{label=\checkbox,nosep,align=left,itemsep=4ex}
 
 
 % define parent folder here
@@ -116,15 +120,17 @@
 
 \ExplSyntaxOn
 
-% keys
 \keys_define:nn{randgentftest/print}
 {%
   solutions .bool_set:N = \l__print_solutions_bool,
-  filepaths .bool_set:N = \l__print_filepaths_bool,
   solutions .value_required:n = true,
+  solutions .initial:n = { true },
+  solutions .default:n = { true },
+
+  filepaths .bool_set:N = \l__print_filepaths_bool,
   filepaths .value_required:n = true,
-  solutions .initial:n = {true},
-  filepaths .initial:n = {false},
+  filepaths .initial:n = { false },
+  filepaths .default:n = { true },
 }%
 
 % args: #1: options (optional), #2: number of true statements, #3: number of false statements
