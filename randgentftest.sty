@@ -24,10 +24,11 @@
 \newcommand*{\checkedbox}{\mbox{\makebox[0pt][l]{\raisebox{0.22ex}{$\times$}}$\square$}}
 
 % checkbox alternative using tikz (not relying on fonts): 
-\newcommand*{\drawTikZcheckboxes}[1][0.24]
+\newcommand*{\drawTikZcheckboxes}
 {%
   \RequirePackage{tikz}
-  \pgfmathsetmacro{\checkboxsize}{#1}
+  \newlength{\checkboxsize}
+  \AtBeginDocument{\settoheight{\checkboxsize}{A}}
   \renewcommand*{\checkbox}{\tikz\draw (0,0) rectangle (\checkboxsize,\checkboxsize);}
   \renewcommand*{\checkedbox}
   {%
