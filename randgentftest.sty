@@ -2,7 +2,7 @@
 % FILE     randgentftest.sty
 % INFO     
 %
-% DATE     18.07.2022
+% DATE     20.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -13,35 +13,46 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
-\ProvidesPackage{randgentftest}
-
-
-\RequirePackage{enumitem}
+\ProvidesExplPackage {randgentftest} {2022-07-19} {0.1}
+  {Create randomly generated true/false tests.}
 
 
 % define checklist environment
-\newcommand*{\checkbox}{$\square$}
-\newcommand*{\checkedbox}{\mbox{\makebox[0pt][l]{\raisebox{0.22ex}{$\times$}}$\square$}}
+\tl_new:N  \l__randgentftest_checkbox_tl
+\tl_set:Nn \l__randgentftest_checkbox_tl { \ensuremath { \square } }
+
+\tl_new:N  \l__randgentftest_checkedbox_tl
+\tl_set:Nn \l__randgentftest_checkedbox_tl {
+  \mbox { \makebox [ 0pt ] [ l ] { \raisebox { 0.22ex } { \ensuremath { \times } } } \ensuremath { \square } } }
+
+\NewDocumentCommand \luaCheckedbox { } { \tl_use:N \l__randgentftest_checkedbox_tl }
 
 % checkbox alternative using tikz (not relying on fonts): 
-\newcommand*{\drawTikZcheckboxes}
-{%
-  \RequirePackage{tikz}
-  \newlength{\checkboxsize}
-  \AtBeginDocument{\settoheight{\checkboxsize}{A}}
-  \renewcommand*{\checkbox}{\tikz\draw (0,0) rectangle (\checkboxsize,\checkboxsize);}
-  \renewcommand*{\checkedbox}
-  {%
-    \begin{tikzpicture}%
-      \draw (0,0) rectangle (\checkboxsize,\checkboxsize);%
-      \draw (0,0) -- (\checkboxsize,\checkboxsize);%
-      \draw (\checkboxsize,0) -- (0,\checkboxsize);%
-    \end{tikzpicture}%
-  }%
+\NewDocumentCommand \drawTikZcheckboxes { } {
+  \RequirePackage { tikz }
+  \newlength { \TikZcheckboxsize }
+  \AtBeginDocument { \settoheight { \TikZcheckboxsize } { A } }
+  \tl_set:Nn \l__randgentftest_checkbox_tl {
+    \tikz \draw (0,0) rectangle (\TikZcheckboxsize,\TikZcheckboxsize); }
+  \tl_set:Nn \l__randgentftest_checkedbox_tl
+  {
+    \begin{tikzpicture}
+      \draw (0,0) rectangle (\TikZcheckboxsize,\TikZcheckboxsize);
+      \draw (0,0) -- (\TikZcheckboxsize,\TikZcheckboxsize);
+      \draw (\TikZcheckboxsize,0) -- (0,\TikZcheckboxsize);
+    \end{tikzpicture}
+  }
 }
 
-\newlist{checklist}{itemize}{2}
-\setlist[checklist,1,2]{label=\checkbox,left=0pt .. 1.6em,nosep,align=left,itemsep=4ex}
+\RequirePackage { enumitem }
+\newlist { checklist } { itemize } { 2 }
+\setlist [ checklist,1,2 ] {
+  label = \tl_use:N \l__randgentftest_checkbox_tl,
+  left = 0pt .. 1.6em,
+  nosep,
+  align = left,
+  itemsep = 4ex
+}
 
 
 % define parent folder here

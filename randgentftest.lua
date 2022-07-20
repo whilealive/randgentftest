@@ -184,7 +184,7 @@ end
 local function getCheckboxtype(fn)
   local boxtype = ""
   if string.find(fn, trueStatementsDir, 1, true) then
-    boxtype = "[\\checkedbox]"
+    boxtype = "[\\luaCheckedbox]"
   end
   return boxtype
 end
