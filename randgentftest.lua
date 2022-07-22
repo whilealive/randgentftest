@@ -2,7 +2,7 @@
 -- FILE     randgentftest.lua
 -- INFO     
 --
--- DATE     19.07.2022
+-- DATE     22.07.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -184,7 +184,7 @@ end
 local function getCheckboxtype(fn)
   local boxtype = ""
   if string.find(fn, trueStatementsDir, 1, true) then
-    boxtype = "[\\luaCheckedbox]"
+    boxtype = "[\\getCheckedbox]"
   end
   return boxtype
 end
