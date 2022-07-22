@@ -219,6 +219,10 @@ end
 -- "key1 = value1, key2 = value2, key3 = value3, ..."
 -- in a table {{key=k1, value=v1}, {key=k2, value=v2}, {key=k3, value=v3}, ...}
 local function parseTeXfilterstring(filterstr)
+  if not filterstr then
+    return {}
+  end
+
   local tmplist = csvsplit(filterstr)
   local filterlist = {}
   for i = 1, #tmplist do

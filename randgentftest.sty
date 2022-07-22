@@ -170,10 +170,12 @@
     require('randgentftest.lua')
     \bool_if:NTF{\l__print_filepaths_bool}
     {%
-      printAll('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_filter_tl', true)
+      %printAll('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_filter_tl', true)
+      printAll('\l__randgentftest_collectionfolder_tl', ' ', true)
     }%
     {%
-      printAll('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_filter_tl', false)
+      %printAll('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_filter_tl', false)
+      printAll('\l__randgentftest_collectionfolder_tl', ' ', false)
     }%
   }%
 }%
