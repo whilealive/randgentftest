@@ -57,3 +57,50 @@ end
 -- \Sammlungsordner/03-Lineare-Gleichungssysteme/
 -- ...
 
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+-- understanding dirtree:
+--
+-- dirtree iterator
+-- reference: http://lua-users.org/wiki/DirTreeIterator
+local function dirtree(dir)
+  local sep = getfolderpathseparator()
+
+  if string.sub(dir, -1) == sep then
+    dir=string.sub(dir, 1, -2)
+  end
+
+  local function yieldtree(dir)
+    for entry in lfs.dir(dir) do      -- lfs.dir(path): iterator over entries of given directory
+      if not entry:match("^%.") then  -- don't follow directories that start with a dot
+        entry = dir .. sep .. entry   -- complete path with parent folder(s)
+        if lfs.isdir(entry) then
+          yieldtree(entry)
+        else
+          coroutine.yield(entry)      -- suspend coroutine and let coroutine.resume return entry
+        end
+      end
+    end
+  end
+
+  return coroutine.wrap(function() yieldtree(dir) end)  -- create coroutine and return a function that resumes it when called
+end
+
+local function listTeXfiles(dir)
+  local fnlist = {}
+
+  for fn in dirtree(dir) do
+    if isValidTeXFile(fn) then
+      table.insert(fnlist, fn)
+    end
+  end
+
+  if currentOS() == "Windows" then 
+    changePathsToUnixStyle(fnlist) 
+  end
+
+  return fnlist
+end
+------------------------------------------------------------------------------------------------------------------------------
