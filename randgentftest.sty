@@ -26,7 +26,7 @@
   \mbox { \makebox [ 0pt ] [ l ] { \raisebox { 0.22ex } { \ensuremath { \times } } } \ensuremath { \square } } }
 
 % checkbox alternative using tikz (not relying on fonts): 
-\NewDocumentCommand \drawTikZcheckboxes { } {
+\NewDocumentCommand \DrawTikZcheckboxes { } {
   \RequirePackage { tikz }
   \newlength { \TikZcheckboxsize }
   \AtBeginDocument { \settoheight { \TikZcheckboxsize } { A } }
@@ -42,7 +42,7 @@
   }
 }
 
-% Using expl3 directly within randgentftest.lua is problematic - it breaks file paths with spaces etc. So here we export the variable in a traditional LaTeX2e form.
+% Using expl3 directly within randgentftest.lua is problematic - it breaks file paths with spaces etc. So here we export the variable in a traditional LaTeX2e form for later use in randgentftest.lua.
 \cs_new:Npn \getCheckedbox { \tl_use:N \l__randgentftest_checkedbox_tl }
 
 \RequirePackage { enumitem }
@@ -57,77 +57,71 @@
 
 
 % define parent folder here
-\newcommand*{\Collectionfolder}{Aussagesammlung}
+\tl_new:N \l__randgentftest_collectionfolder_tl
+\NewDocumentCommand \SetCollectionFolderTo { m } { 
+  \tl_set:Nn \l__randgentftest_collectionfolder_tl { #1 }
+}
 
 
 % define subfolders here
-% set default: all folders
-% use renewcommand to delete entries from list
-\newcommand*{\Topicfolders}
-{%
-  01-Algebra,
-  02-Potenzrechnen,
-  03-Lineare-Gleichungen,
-  04-Lineare-Gleichungssysteme,
-  05-Quadratische-Gleichungen,
-  06-Nichtlineare-Gleichungen,
-  07-Lineare-Funktionen,
-  08-Quadratische-Funktionen,
-  09-Potenzfunktionen,
-  10-Polynomfunktionen,
-  11-Exponentialfunktionen,
-  12-Datenanalyse,
-  13-Wahrscheinlichkeitsrechnen,
-  14-Planimetrie-I,
-  15-Planimetrie-II,
-  16-Trigonometrie-I,
-  17-Trigonometrie-II,
-  18-Stereometrie,
-  19-Vektorgeometrie,
-  20-Privat,
-}%
-
-
-% shortcut for TALS GLF content
-\newcommand*{\TALSGLF}
-{%
-  \renewcommand*{\Topicfolders}
-  {%
-    01-Algebra,
-    03-Lineare-Gleichungen,
-    04-Lineare-Gleichungssysteme,
-    05-Quadratische-Gleichungen,
-    07-Lineare-Funktionen,
-    08-Quadratische-Funktionen,
-    12-Datenanalyse,
-    14-Planimetrie-I,
-    15-Planimetrie-II,
-    16-Trigonometrie-I,
-    17-Trigonometrie-II,
-  }%
-}
-
-% shortcut for TALS SPF content
-\newcommand*{\TALSSPF}
-{%
-  \renewcommand*{\Topicfolders}
-  {%
-    02-Potenzrechnen,
-    06-Nichtlineare-Gleichungen,
-    09-Potenzfunktionen,
-    10-Polynomfunktionen,
-    11-Exponentialfunktionen,
-    18-Stereometrie,
-    19-Vektorgeometrie,
-  }%
+\tl_new:N \l__randgentftest_topicfolders_tl
+\NewDocumentCommand \SetTopicFoldersTo { m } { 
+  \tl_set:Nn \l__randgentftest_topicfolders_tl { #1 }
 }
 
 
-\newcommand*{\tFolder}{01-wahr}
-\newcommand*{\fFolder}{02-falsch}
+%% shortcut for TALS GLF content
+%\newcommand*{\TALSGLF}
+%{%
+%  \renewcommand*{\Topicfolders}
+%  {%
+%    01-Algebra,
+%    03-Lineare-Gleichungen,
+%    04-Lineare-Gleichungssysteme,
+%    05-Quadratische-Gleichungen,
+%    07-Lineare-Funktionen,
+%    08-Quadratische-Funktionen,
+%    12-Datenanalyse,
+%    14-Planimetrie-I,
+%    15-Planimetrie-II,
+%    16-Trigonometrie-I,
+%    17-Trigonometrie-II,
+%  }%
+%}
+%
+%% shortcut for TALS SPF content
+%\newcommand*{\TALSSPF}
+%{%
+%  \renewcommand*{\Topicfolders}
+%  {%
+%    02-Potenzrechnen,
+%    06-Nichtlineare-Gleichungen,
+%    09-Potenzfunktionen,
+%    10-Polynomfunktionen,
+%    11-Exponentialfunktionen,
+%    18-Stereometrie,
+%    19-Vektorgeometrie,
+%  }%
+%}
 
 
-\newcommand*{\Filterlist}{}
+\tl_new:N  \l__randgentftest_tFolder_tl
+\tl_set:Nn \l__randgentftest_tFolder_tl { 01-wahr }  % set as default here
+\NewDocumentCommand \SetTrueFolderTo { m } {
+  \tl_set:Nn \l__randgentftest_tFolder_tl { #1 }
+}
+
+\tl_new:N  \l__randgentftest_fFolder_tl
+\tl_set:Nn \l__randgentftest_fFolder_tl { 02-falsch }  % set as default here
+\NewDocumentCommand \SetFalseFolderTo { m } {
+  \tl_set:Nn \l__randgentftest_fFolder_tl { #1 }
+}
+
+
+\tl_new:N  \l__randgentftest_filter_tl
+\NewDocumentCommand \SetFilterTo { m } {
+  \tl_set:Nn \l__randgentftest_filter_tl { #1 }
+}
 
 
 \keys_define:nn{randgentftest/print}
@@ -155,14 +149,14 @@
     {%
       \bool_if:NTF{\l__print_filepaths_bool}
       {%
-        createRandGenTest('\Collectionfolder', '\Topicfolders', '\tFolder', '\fFolder', #2, #3, '\Filterlist', true, true)
+        createRandGenTest('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_topicfolders_tl', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', #2, #3, '\l__randgentftest_filter_tl', true, true)
       }%
       {%
-        createRandGenTest('\Collectionfolder', '\Topicfolders', '\tFolder', '\fFolder', #2, #3, '\Filterlist', true, false)
+        createRandGenTest('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_topicfolders_tl', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', #2, #3, '\l__randgentftest_filter_tl', true, false)
       }%
     }%
     {%  no solutions
-      createRandGenTest('\Collectionfolder', '\Topicfolders', '\tFolder', '\fFolder', #2, #3, '\Filterlist')
+      createRandGenTest('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_topicfolders_tl', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', #2, #3, '\l__randgentftest_filter_tl')
     }%
   }%
 }%
@@ -176,10 +170,10 @@
     require('randgentftest.lua')
     \bool_if:NTF{\l__print_filepaths_bool}
     {%
-      printAll('\Collectionfolder', '\Filterlist', true)
+      printAll('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_filter_tl', true)
     }%
     {%
-      printAll('\Collectionfolder', '\Filterlist', false)
+      printAll('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_filter_tl', false)
     }%
   }%
 }%

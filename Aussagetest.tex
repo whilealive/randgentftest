@@ -2,25 +2,22 @@
 % FILE     Aussagetest.tex
 % INFO     -
 %
-% DATE     19.07.2022
+% DATE     22.07.2022
 % OWNER    Bischofberger
 % ==================================================================
 
 \documentclass{randgentftestbmzcls}
 
-% some info here...
 \usepackage{randgentftest}
 
-% redefine parent folder here if you wish
-%\renewcommand*{\Collectionfolder}{Aussagesammlung}
+\SetCollectionFolderTo{Aussagesammlung}
 
 % Alle unkommentierten (aktiven) Ordner werden berücksichtigt.
-\renewcommand*{\Topicfolders}
-{%
+\SetTopicFoldersTo{%
   01-Algebra,
-  %02-Potenzrechnen,
-  %03-Lineare-Gleichungen,
-  %04-Lineare-Gleichungssysteme,
+  02-Potenzrechnen,
+  03-Lineare-Gleichungen,
+  04-Lineare-Gleichungssysteme,
   %05-Quadratische-Gleichungen,
   %06-Nichtlineare-Gleichungen,
   %07-Lineare-Funktionen,
@@ -33,10 +30,10 @@
   %14-Planimetrie-I,
   %15-Planimetrie-II,
   %16-Trigonometrie-I,
-  17-Trigonometrie-II,
-  %18-Stereometrie,
-  %19-Vektorgeometrie,
-  %20-Privat,
+  %17-Trigonometrie-II,
+  %18 Stereometrie,
+  19-Vektorgeometrie,
+  20-Privat
 }%
 
 % Abkürzungen für diverse Ausrichtungen
@@ -44,13 +41,13 @@
 %\TALSGLF
 %\TALSSPF
 
-%\renewcommand*{\Filterlist}
-%{%
-%  AUTOR=Bruno Bischofberger,
-%  AUSRICHTUNG=TALS,
-%}%
+\SetFilterTo
+{%
+  AUTOR=Bruno Bischofberger,
+  AUSRICHTUNG=TALS,  % hier darf nur eine Ausrichtung angegeben werden
+}%
 
-%\drawTikZcheckboxes
+%\DrawTikZcheckboxes
 
 % ==================================================================
 \begin{document}
