@@ -25,6 +25,8 @@
 \tl_set:Nn \l__randgentftest_checkedbox_tl {
   \mbox { \makebox [ 0pt ] [ l ] { \raisebox { 0.22ex } { \ensuremath { \times } } } \ensuremath { \square } } }
 
+\NewDocumentCommand \luaCheckedbox { } { \tl_use:N \l__randgentftest_checkedbox_tl }
+
 % checkbox alternative using tikz (not relying on fonts): 
 \NewDocumentCommand \drawTikZcheckboxes { } {
   \RequirePackage { tikz }
@@ -127,6 +129,8 @@
 \newcommand*{\Filterlist}{}
 
 
+\ExplSyntaxOn
+
 \keys_define:nn{randgentftest/print}
 {%
   solutions .bool_set:N = \l__print_solutions_bool,
@@ -180,4 +184,6 @@
     }%
   }%
 }%
+
+\ExplSyntaxOff
 

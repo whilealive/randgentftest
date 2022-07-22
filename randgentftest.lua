@@ -184,7 +184,7 @@ end
 local function getCheckboxtype(fn)
   local boxtype = ""
   if string.find(fn, trueStatementsDir, 1, true) then
-    boxtype = "[ \\l__randgentftest_checkedbox_tl ]"
+    boxtype = "[\\luaCheckedbox]"
   end
   return boxtype
 end
@@ -200,7 +200,6 @@ end
 
 
 local function printCheckedChecklist(--[[required]]tbl, --[[optional]]opt_printpath, --[[optional]]opt_solutions)
-  tex.sprint("\\ExplSyntaxOn")
   if opt_solutions then
     tex.sprint("\\section*{Lösungen}")
   end
@@ -213,7 +212,6 @@ local function printCheckedChecklist(--[[required]]tbl, --[[optional]]opt_printp
     end
   end
   tex.sprint("\\end{checklist}\\clearpage")
-  tex.sprint("\\ExplSyntaxOff")
 end
 
 
