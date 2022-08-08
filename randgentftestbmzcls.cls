@@ -2,7 +2,7 @@
 % FILE     randgentftestbmzcls.cls
 % INFO     
 %
-% DATE     19.07.2022
+% DATE     08.08.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -46,4 +46,37 @@
 %\RequirePackage{pgfplots}
 %\pgfplotsset{compat=newest}
 %\pgfplotsset{axis lines=center,axis line style={-Latex}}
+
+% shortcut for TALS GLF content
+\newcommand{\TALSGLF}
+{%
+  \SetTopicFoldersTo{%
+    01-Algebra,
+    03-Lineare-Gleichungen,
+    04-Lineare-Gleichungssysteme,
+    05-Quadratische-Gleichungen,
+    07-Lineare-Funktionen,
+    08-Quadratische-Funktionen,
+    12-Datenanalyse,
+    14-Planimetrie-I,
+    15-Planimetrie-II,
+    16-Trigonometrie-I,
+    17-Trigonometrie-II,
+  }%
+}
+
+% shortcut for TALS SPF content
+\newcommand{\TALSSPF}
+{%
+  \SetTopicFoldersTo{%
+    02-Potenzrechnen,
+    06-Nichtlineare-Gleichungen,
+    09-Potenzfunktionen,
+    10-Polynomfunktionen,
+    11-Exponentialfunktionen,
+    18-Stereometrie,
+    19-Vektorgeometrie,
+  }%
+}
+
 
