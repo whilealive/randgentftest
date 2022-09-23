@@ -2,7 +2,7 @@
 -- FILE     randgentftest.lua
 -- INFO     
 --
--- DATE     22.07.2022
+-- DATE     23.09.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -23,8 +23,17 @@ local function tableisempty(tbl)
 end
 
 
-function extend(tbl1, tbl2)
+-- append all elements of tbl2 to the end of tbl1
+function append(tbl1, tbl2)
+  --[[
+    -- Lua 5.3 (TeX Live 2019) version:
     return table.move(tbl2, 1, #tbl2, #tbl1 + 1, tbl1)
+  ]]
+
+  -- TeX Live 2018 and lower version:
+  for i = 1, #tbl2 do
+    table.insert(tbl1, tbl2[i])
+  end
 end
 
 
@@ -301,8 +310,8 @@ local function collateStatements(dirlist, filterlist, numberOfTrueStatements, nu
   local fnlistFalse = {}
 
   for i = 1, #dirlist do
-    extend(fnlistTrue,  listTeXfiles(dirlist[i] .. trueStatementsDir))
-    extend(fnlistFalse, listTeXfiles(dirlist[i] .. falseStatementsDir))
+    append(fnlistTrue,  listTeXfiles(dirlist[i] .. trueStatementsDir))
+    append(fnlistFalse, listTeXfiles(dirlist[i] .. falseStatementsDir))
   end
 
   local fnlistTrue_filtered  = filter(fnlistTrue, filterlist)
