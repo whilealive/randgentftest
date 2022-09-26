@@ -24,16 +24,11 @@ end
 
 
 -- append all elements of tbl2 to the end of tbl1
-function append(tbl1, tbl2)
-  --[[
-    -- Lua 5.3 (TeX Live 2019) version:
-    return table.move(tbl2, 1, #tbl2, #tbl1 + 1, tbl1)
-  ]]
-
-  -- TeX Live 2018 and lower version:
+function concat(tbl1, tbl2)
   for i = 1, #tbl2 do
     table.insert(tbl1, tbl2[i])
   end
+  return tbl1
 end
 
 
@@ -310,8 +305,8 @@ local function collateStatements(dirlist, filterlist, numberOfTrueStatements, nu
   local fnlistFalse = {}
 
   for i = 1, #dirlist do
-    append(fnlistTrue,  listTeXfiles(dirlist[i] .. trueStatementsDir))
-    append(fnlistFalse, listTeXfiles(dirlist[i] .. falseStatementsDir))
+    concat(fnlistTrue,  listTeXfiles(dirlist[i] .. trueStatementsDir))
+    concat(fnlistFalse, listTeXfiles(dirlist[i] .. falseStatementsDir))
   end
 
   local fnlistTrue_filtered  = filter(fnlistTrue, filterlist)
