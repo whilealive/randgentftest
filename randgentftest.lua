@@ -2,9 +2,13 @@
 -- FILE     randgentftest.lua
 -- INFO     
 --
--- DATE     23.09.2022
+-- DATE     28.09.2022
 -- OWNER    Bischofberger
 -- ==================================================================
+--
+-- TODO:
+-- - Wenn Ordner fehlt (Kapitel/wahr/falsch, dann tex.warning ausgeben aber weitermachen)
+-- - setTrueFalseDir() vereinfachen, globale Variablen evtl. eliminieren
 
 
 -- OS checker
@@ -92,22 +96,18 @@ local function parseTeXdirstring(parentdir, subdirstr)
 end
 
 
--- TODO: remove globals here!
--- set global true/false subfolders
-trueStatementsDir  = "01-wahr/"
-falseStatementsDir = "02-falsch/"
+local function parseTrueFalseDirs(tdir, fdir)
+  local tfdirs = { t = tdir, f = fdir }
 
-local function setTrueFalseDir(nameOfTrueDir, nameOfFalseDir)
-  trueStatementsDir  = nameOfTrueDir
-  falseStatementsDir = nameOfFalseDir
   -- we really need the "/" at the end here (OS-independent)
   -- since the LaTeX input mechanism uses /-separators only 
-  if string.sub(trueStatementsDir, -1) ~= "/" then
-    trueStatementsDir = trueStatementsDir .. "/"
+  for _, v in pairs(tfdirs) do
+    if string.sub(v, -1) ~= "/" then
+      v = v .. "/"
+    end
   end
-  if string.sub(falseStatementsDir, -1) ~= "/" then
-    falseStatementsDir = falseStatementsDir .. "/"
-  end
+
+  return tfdirs
 end
 
 
@@ -185,9 +185,9 @@ local function shuffle(tbl)
 end
 
 
-local function getCheckboxtype(fn)
+local function getCheckboxtype(fn, tdir)
   local boxtype = ""
-  if string.find(fn, trueStatementsDir, 1, true) then
+  if string.find(fn, tdir, 1, true) then
     boxtype = "[\\getCheckedbox]"
   end
   return boxtype
@@ -203,13 +203,13 @@ local function printChecklist(tbl)
 end
 
 
-local function printCheckedChecklist(--[[required]]tbl, --[[optional]]opt_printpath, --[[optional]]opt_solutions)
+local function printCheckedChecklist(--[[required]]tbl, --[[required]] tdir, --[[optional]]opt_printpath, --[[optional]]opt_solutions)
   if opt_solutions then
     tex.sprint("\\section*{Lösungen}")
   end
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
-    local boxtype = getCheckboxtype(tbl[i])
+    local boxtype = getCheckboxtype(tbl[i], tdir)
     tex.sprint("\\item" .. boxtype .. "\\input{\\dq " .. tbl[i] .. "\\dq} \\par")
     if opt_printpath then
       tex.sprint("\\begin{minipage}{\\linewidth}\\footnotesize\\verb+" .. tbl[i] .. "+\\end{minipage}\\par")
@@ -300,13 +300,13 @@ local function filter(dirlist, filterlist)
 end
 
 
-local function collateStatements(dirlist, filterlist, numberOfTrueStatements, numberOfFalseStatements)
+local function collateStatements(dirlist, tfdirs, filterlist, numberOfTrueStatements, numberOfFalseStatements)
   local fnlistTrue  = {}
   local fnlistFalse = {}
 
   for i = 1, #dirlist do
-    concat(fnlistTrue,  listTeXfiles(dirlist[i] .. trueStatementsDir))
-    concat(fnlistFalse, listTeXfiles(dirlist[i] .. falseStatementsDir))
+    concat(fnlistTrue,  listTeXfiles(dirlist[i] .. tfdirs.t))
+    concat(fnlistFalse, listTeXfiles(dirlist[i] .. tfdirs.f))
   end
 
   local fnlistTrue_filtered  = filter(fnlistTrue, filterlist)
@@ -351,12 +351,12 @@ function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrue
   local dirlist = parseTeXdirstring(parentdir, subdirstr)
 
   -- set names of true/false subfolders
-  setTrueFalseDir(trueDir, falseDir)
+  local tfdirs = parseTrueFalseDirs(trueDir, falseDir)
 
   local filterlist = parseTeXfilterstring(filterstr)
 
   -- create a randomly collated statement list
-  local fnlist_mixed_filtered = collateStatements(dirlist, filterlist, numberOfTrueStatements, numberOfFalseStatements)
+  local fnlist_mixed_filtered = collateStatements(dirlist, tfdirs, filterlist, numberOfTrueStatements, numberOfFalseStatements)
 
   if tableisempty(fnlist_mixed_filtered) then
     return false
@@ -366,7 +366,7 @@ function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrue
   printChecklist(fnlist_mixed_filtered)
 
   if bool_printSolutions then
-    printCheckedChecklist(fnlist_mixed_filtered, bool_printFilePaths, true)
+    printCheckedChecklist(fnlist_mixed_filtered, tfdirs.t, bool_printFilePaths, true)
   end
 end
 
