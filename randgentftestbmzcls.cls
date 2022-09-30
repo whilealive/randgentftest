@@ -2,7 +2,7 @@
 % FILE     randgentftestbmzcls.cls
 % INFO     
 %
-% DATE     08.08.2022
+% DATE     30.09.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -23,8 +23,6 @@
 \RequirePackage{amsfonts}
 \RequirePackage{mathtools}
 
-\RequirePackage[makeroom]{cancel}
-
 \setlength{\parindent}{0pt}
 \allowdisplaybreaks
 \raggedbottom
@@ -36,8 +34,14 @@
 \cfoot{}
 \chead[]{Wahr-Falsch-Test}
 
+
+% =================================================
+% Verschiedene Zusatzpakete für BMZ-Sammlung
+
 \RequirePackage{siunitx}
 \sisetup{per-mode=symbol,exponent-product=\cdot}
+
+\RequirePackage[makeroom]{cancel}
 
 %\RequirePackage{tikz}
 %\usetikzlibrary{calc,angles,intersections,arrows.meta}
@@ -47,7 +51,18 @@
 %\pgfplotsset{compat=newest}
 %\pgfplotsset{axis lines=center,axis line style={-Latex}}
 
-% shortcut for TALS GLF content
+
+% =================================================
+% BMZ Wahr-Falsch-Tests Settings hier
+
+\RequirePackage{randgentftest}
+
+\SetCollectionFolderTo{Aussagesammlung}
+
+\SetTrueFolderTo{01-wahr/}
+\SetFalseFolderTo{02-falsch/}
+
+% Shortcut für TALS GLF Gesamtinhalte
 \newcommand{\TALSGLF}
 {%
   \SetTopicFoldersTo{%
@@ -65,7 +80,7 @@
   }%
 }
 
-% shortcut for TALS SPF content
+% Shortcut für TALS SPF Gesamtinhalte
 \newcommand{\TALSSPF}
 {%
   \SetTopicFoldersTo{%
@@ -79,4 +94,4 @@
   }%
 }
 
-
+% =================================================

@@ -2,7 +2,7 @@
 % FILE     randgentftest.sty
 % INFO     
 %
-% DATE     23.09.2022
+% DATE     29.09.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -74,8 +74,6 @@
 % define true/false folders
 \tl_new:N  \l__randgentftest_tFolder_tl
 \tl_new:N  \l__randgentftest_fFolder_tl
-\tl_set:Nn \l__randgentftest_tFolder_tl { 01-wahr }    % set as default here
-\tl_set:Nn \l__randgentftest_fFolder_tl { 02-falsch }  % set as default here
 \NewDocumentCommand \SetTrueFolderTo { m } {
   \tl_set:Nn \l__randgentftest_tFolder_tl { #1 }
 }
