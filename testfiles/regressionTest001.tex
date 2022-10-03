@@ -1,0 +1,57 @@
+% ==================================================================
+% FILE     regressionTest001.tex
+% INFO     -
+%
+% DATE     29.09.2022
+% OWNER    Bischofberger
+% ==================================================================
+
+\documentclass[10pt]{article}
+
+\usepackage{regressionTest}
+
+% Alle unkommentierten (aktiven) Ordner werden berücksichtigt.
+\SetTopicFoldersTo{%
+  01-Algebra,
+  02-Potenzrechnen,
+  03-Lineare-Gleichungen,
+  04-Lineare-Gleichungssysteme,
+  %05-Quadratische-Gleichungen,
+  %06-Nichtlineare-Gleichungen,
+  %07-Lineare-Funktionen,
+  %08-Quadratische-Funktionen,
+  %09-Potenzfunktionen,
+  %10-Polynomfunktionen,
+  %11-Exponentialfunktionen,
+  %12-Datenanalyse,
+  %13-Wahrscheinlichkeitsrechnen,
+  %14-Planimetrie-I,
+  %15-Planimetrie-II,
+  %16-Trigonometrie-I,
+  %17-Trigonometrie-II,
+  %18 Stereometrie,
+  19-Vektorgeometrie,
+  20-Privat
+}%
+
+% Benutze eine der unteren beiden Optionen, um rasch alle GLF-/SPF-Themen einzuschliessen.
+%\TALSGLF
+%\TALSSPF
+
+%\SetFilterTo
+%{%
+%  AUTOR=Bruno Bischofberger,
+%  AUSRICHTUNG=TALS,  % hier darf nur eine Ausrichtung angegeben werden
+%}%
+
+% ==================================================================
+\begin{document}
+
+\section*{Wahr-Falsch-Test}
+\CreateStatementTest[solutions=true, filepaths=false]{3}{5}
+
+%\section*{Gesamte Aussagesammlung}
+%\PrintEntireLibrary[filepaths=false]
+
+\end{document}
+% ==================================================================

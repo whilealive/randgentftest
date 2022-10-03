@@ -1,0 +1,39 @@
+#!/bin/bash
+# ==================================================================
+# FILE     runRegressionTest
+# MACHINE  all
+# INFO     
+#
+# DATE     03.10.2022
+# OWNER    Bischofberger
+# ==================================================================
+
+SOURCEDIR="$HOME/Documents/Work/BMS-ZH/01-Unterricht/12-Projekte/randgentftest"
+TESTDIR="testfiles"
+
+PKGFILES=("randgentftest.lua" "randgentftest.sty" "randgentftestbmzcls.cls")
+
+
+die(){
+	echo -e "$0: Error: $1" >&2
+	exit 1
+}
+
+
+echo -n "copying pkgfiles... "
+for pkgfile in "${PKGFILES[@]}" ; do
+  cp -f "$SOURCEDIR/$pkgfile" "$SOURCEDIR/$TESTDIR/$pkgfile"
+done
+echo -e "done\n\n"
+
+
+cd "$SOURCEDIR/$TESTDIR"
+latexmk -lualatex -interaction=nonstopmode -file-line-error
+
+
+echo -n -e "\n\ndeleting pkgfiles... "
+for pkgfile in "${PKGFILES[@]}" ; do
+  rm -f "$SOURCEDIR/$TESTDIR/$pkgfile"
+done
+echo -e "done"
+
