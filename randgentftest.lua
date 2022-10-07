@@ -2,7 +2,7 @@
 -- FILE     randgentftest.lua
 -- INFO     
 --
--- DATE     28.09.2022
+-- DATE     07.10.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 --
@@ -373,8 +373,9 @@ end
 
 -- global: to be called from outside
 -- main routine to print the entire library
-function printAll(--[[required]]parentdir, --[[required]]filterstr, --[[optional]]opt_printpath)
+function printAll(parentdir, trueDir, falseDir, filterstr, --[[optional]]opt_printpath)
   local sep = getfolderpathseparator()
+  local tfdirs = parseTrueFalseDirs(trueDir, falseDir)
   local fnlist = listTeXfiles(lfs.currentdir()..sep..parentdir)
 
   local filterlist = parseTeXfilterstring(filterstr)
@@ -382,7 +383,7 @@ function printAll(--[[required]]parentdir, --[[required]]filterstr, --[[optional
 
   table.sort(fnlist_filtered)
 
-  printCheckedChecklist(fnlist_filtered, opt_printpath, false)
+  printCheckedChecklist(fnlist_filtered, tfdirs.t, opt_printpath, false)
 end
 
 

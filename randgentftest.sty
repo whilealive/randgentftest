@@ -2,7 +2,7 @@
 % FILE     randgentftest.sty
 % INFO     
 %
-% DATE     29.09.2022
+% DATE     07.10.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -137,11 +137,11 @@
     \bool_if:NTF{\l__print_filepaths_bool}
     {%
       %printAll('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_filter_tl', true)
-      printAll('\l__randgentftest_collectionfolder_tl', ' ', true)
+      printAll('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', ' ', true)
     }%
     {%
       %printAll('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_filter_tl', false)
-      printAll('\l__randgentftest_collectionfolder_tl', ' ', false)
+      printAll('\l__randgentftest_collectionfolder_tl', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', ' ', false)
     }%
   }%
 }%
