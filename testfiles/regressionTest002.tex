@@ -1,20 +1,29 @@
 % ==================================================================
 % FILE     regressionTest001.tex
-% INFO     -
+% INFO     test for non-existing collectionfolder
 %
-% DATE     29.09.2022
+% DATE     18.10.2022
 % OWNER    Bischofberger
 % ==================================================================
 
 \documentclass[10pt]{article}
 
-\usepackage{regressionTest}
+\RequirePackage[ngerman]{babel}
+\RequirePackage[babel=true]{microtype}
+
+\RequirePackage{amsfonts}
+
+\RequirePackage{randgentftest}
+
+\SetCollectionFolderTo{nonexistingFolder}
+
+\SetTrueFolderTo{01-wahr/}
+\SetFalseFolderTo{02-falsch/}
 
 % ==================================================================
 \begin{document}
 
-\section*{Gesamte Aussagesammlung}
-\PrintEntireLibrary[filepaths=true]
+\CreateStatementTest[solutions=true, filepaths=false]{1}{1}
 
 \end{document}
 % ==================================================================

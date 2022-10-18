@@ -2,7 +2,7 @@
 -- FILE     randgentftest.lua
 -- INFO     
 --
--- DATE     07.10.2022
+-- DATE     18.10.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 --
@@ -19,6 +19,30 @@ local function currentOS()
   elseif sep == "\\" then return "Windows"
   else                    return "Other"
   end
+end
+
+
+--- Check if a file or directory exists in this path
+local function exists(file)
+   local ok, err, code = os.rename(file, file)
+   if not ok then
+      if code == 13 then
+         -- Permission denied, but it exists
+         return true
+      end
+   end
+   return ok, err
+end
+
+
+--- Check if a directory exists in this path
+local function isdir(dir)
+   -- "/" works on both Unix and Windows
+   local ok, err = exists(dir.."/")
+   if not ok then
+    tex.error("randgentftest error: given folder \"" .. dir .. "\" does not exist")
+  end
+  return ok, err
 end
 
 
@@ -142,6 +166,7 @@ local function getfileextension(fn)
 end
 
 
+-- TODO: this is bad. how do we handle files without extensions?
 local function isValidTeXFile(fn)
   return getfileextension(fn) == ".tex"
 end
@@ -314,7 +339,7 @@ local function collateStatements(dirlist, tfdirs, filterlist, numberOfTrueStatem
 
   if numberOfTrueStatements > #fnlistTrue_filtered or 
      numberOfFalseStatements > #fnlistFalse_filtered then
-    tex.error("number of chosen statements is higher than what we have in the folder")
+    tex.error("randgentftest error: number of chosen statements is higher than what we have in the folder")
     return {}
   end
 
@@ -345,13 +370,16 @@ end
 
 -- global: to be called from outside
 -- main routine for printing random generated tests
-function createRandGenTest(parentdir, subdirstr, trueDir, falseDir, numberOfTrueStatements, numberOfFalseStatements, filterstr, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
+function createRandGenTest(parentdir, subdirstr, tdir, fdir, numberOfTrueStatements, numberOfFalseStatements, filterstr, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
+  if not isdir(parentdir) then
+    return false
+  end
 
   -- fill a list of absolute paths to all subfolders
   local dirlist = parseTeXdirstring(parentdir, subdirstr)
 
   -- set names of true/false subfolders
-  local tfdirs = parseTrueFalseDirs(trueDir, falseDir)
+  local tfdirs = parseTrueFalseDirs(tdir, fdir)
 
   local filterlist = parseTeXfilterstring(filterstr)
 
@@ -373,9 +401,13 @@ end
 
 -- global: to be called from outside
 -- main routine to print the entire library
-function printAll(parentdir, trueDir, falseDir, filterstr, --[[optional]]opt_printpath)
+function printAll(parentdir, tdir, fdir, filterstr, --[[optional]]opt_printpath)
+  if not isdir(parentdir) then
+    return false
+  end
+
   local sep = getfolderpathseparator()
-  local tfdirs = parseTrueFalseDirs(trueDir, falseDir)
+  local tfdirs = parseTrueFalseDirs(tdir, fdir)
   local fnlist = listTeXfiles(lfs.currentdir()..sep..parentdir)
 
   local filterlist = parseTeXfilterstring(filterstr)
