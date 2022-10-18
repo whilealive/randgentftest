@@ -87,11 +87,15 @@ end
 
 
 local function parseTeXdirstring(parentdir, subdirstr)
-  -- subdirstr is a comma separated list of subfolders of parentdir
-  local dirlist = csvsplit(subdirstr)
-
   -- complete all dir paths with currentdir/parendir to absolute paths
   local sep = getfolderpathseparator()
+
+  if subdirstr == nil or subdirstr == '' then
+    return { parentdir .. sep }
+  end
+
+  -- subdirstr is a comma separated list of subfolders of parentdir
+  local dirlist = csvsplit(subdirstr)
 
   for i = 1, #dirlist do
     dirlist[i] = lfs.currentdir() .. sep .. parentdir .. sep .. dirlist[i] .. sep
@@ -362,12 +366,8 @@ function createRandGenTest(parentdir, subdirstr, tdir, fdir, ntstats, nfstats, f
   local tfdirs = parseTrueFalseDirs(tdir, fdir)
 
   for i = 1, #dirlist do
-    if not isdir(dirlist[i] .. tfdirs.t) then
-      return false
-    end
-    if not isdir(dirlist[i] .. tfdirs.f) then
-      return false
-    end
+    if not isdir(dirlist[i] .. tfdirs.t) then return false end
+    if not isdir(dirlist[i] .. tfdirs.f) then return false end
   end
 
   local filterlist = parseTeXfilterstring(filterstr)

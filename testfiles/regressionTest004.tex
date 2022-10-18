@@ -16,7 +16,6 @@
 
 \SetTopicFoldersTo{01-Algebra}
 
-
 %\SetTrueFolderTo{01-wahr/}
 %\SetFalseFolderTo{02-falsch/}
 
@@ -24,6 +23,11 @@
 \begin{document}
 
 \CreateStatementTest[solutions=true, filepaths=false]{RegressionTestCollection}{1}{1}
+
+\clearpage
+
+% FIXME: true-/false-distinction here is currently not possible (see checkboxes!)
+\PrintEntireLibrary[filepaths=true]{RegressionTestCollection}
 
 \end{document}
 % ==================================================================
