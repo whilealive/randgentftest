@@ -5,10 +5,6 @@
 -- DATE     18.10.2022
 -- OWNER    Bischofberger
 -- ==================================================================
---
--- TODO:
--- - Wenn Ordner fehlt (Kapitel/wahr/falsch, dann tex.warning ausgeben aber weitermachen)
--- - setTrueFalseDir() vereinfachen, globale Variablen evtl. eliminieren
 
 
 -- OS checker
@@ -19,6 +15,15 @@ local function currentOS()
   elseif sep == "\\" then return "Windows"
   else                    return "Other"
   end
+end
+
+
+local function isdir(dir)
+  if not lfs.isdir(dir) then
+    tex.error("randgentftest error: given folder \"" .. dir .. "\" does not exist")
+    return false
+  end
+  return true
 end
 
 
@@ -301,7 +306,7 @@ local function filter(dirlist, filterlist)
 end
 
 
-local function collateStatements(dirlist, tfdirs, filterlist, numberOfTrueStatements, numberOfFalseStatements)
+local function collateStatements(dirlist, tfdirs, filterlist, ntstats, nfstats)
   local fnlistTrue  = {}
   local fnlistFalse = {}
 
@@ -313,19 +318,19 @@ local function collateStatements(dirlist, tfdirs, filterlist, numberOfTrueStatem
   local fnlistTrue_filtered  = filter(fnlistTrue, filterlist)
   local fnlistFalse_filtered = filter(fnlistFalse, filterlist)
 
-  if numberOfTrueStatements > #fnlistTrue_filtered or 
-     numberOfFalseStatements > #fnlistFalse_filtered then
+  if ntstats > #fnlistTrue_filtered or 
+     nfstats > #fnlistFalse_filtered then
     tex.error("randgentftest error: number of chosen statements is higher than what we have in the folder")
     return {}
   end
 
   local fnlistMixed_filtered = {}
 
-  for i = 1, numberOfTrueStatements do
+  for i = 1, ntstats do
     local fn = table.remove(fnlistTrue_filtered, math.random(#fnlistTrue_filtered))
     table.insert(fnlistMixed_filtered, fn)
   end
-  for i = 1, numberOfFalseStatements do
+  for i = 1, nfstats do
     local fn = table.remove(fnlistFalse_filtered, math.random(#fnlistFalse_filtered))
     table.insert(fnlistMixed_filtered, fn)
   end
@@ -340,16 +345,14 @@ end
 
 
 
--- --------------------------------------------
--- global functions - to be called from outside
--- --------------------------------------------
+-- ------------------------------------------------------
+-- global functions - to be called from randgentftest.sty
+-- ------------------------------------------------------
 
--- global: to be called from outside
--- main routine for printing random generated tests
-function createRandGenTest(parentdir, subdirstr, tdir, fdir, numberOfTrueStatements, numberOfFalseStatements, filterstr, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
-  if not lfs.isdir(parentdir) then
-    tex.error("randgentftest error: given folder \"" .. parentdir .. "\" does not exist")
-    return false
+-- main function to print random generated tests
+function createRandGenTest(parentdir, subdirstr, tdir, fdir, ntstats, nfstats, filterstr, --[[optional]]bool_printSolutions, --[[optional]]bool_printFilePaths)
+  if not isdir(parentdir) then 
+    return false 
   end
 
   -- fill a list of absolute paths to all subfolders
@@ -358,10 +361,19 @@ function createRandGenTest(parentdir, subdirstr, tdir, fdir, numberOfTrueStateme
   -- set names of true/false subfolders
   local tfdirs = parseTrueFalseDirs(tdir, fdir)
 
+  for i = 1, #dirlist do
+    if not isdir(dirlist[i] .. tfdirs.t) then
+      return false
+    end
+    if not isdir(dirlist[i] .. tfdirs.f) then
+      return false
+    end
+  end
+
   local filterlist = parseTeXfilterstring(filterstr)
 
   -- create a randomly collated statement list
-  local fnlist_mixed_filtered = collateStatements(dirlist, tfdirs, filterlist, numberOfTrueStatements, numberOfFalseStatements)
+  local fnlist_mixed_filtered = collateStatements(dirlist, tfdirs, filterlist, ntstats, nfstats)
 
   if tableisempty(fnlist_mixed_filtered) then
     return false
@@ -376,12 +388,11 @@ function createRandGenTest(parentdir, subdirstr, tdir, fdir, numberOfTrueStateme
 end
 
 
--- global: to be called from outside
--- main routine to print the entire library
+-- main function to print the entire library
+-- FIXME: true-/false-distinction will fail here if names of true-/false-folders are not correct - and we cannot check if they really exist...
 function printAll(parentdir, tdir, fdir, filterstr, --[[optional]]opt_printpath)
-  if not lfs.isdir(parentdir) then
-    tex.error("randgentftest error: given folder \"" .. parentdir .. "\" does not exist")
-    return false
+  if not isdir(parentdir) then 
+    return false 
   end
 
   local sep = getfolderpathseparator()
