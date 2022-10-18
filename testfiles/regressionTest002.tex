@@ -10,12 +10,9 @@
 
 \RequirePackage[ngerman]{babel}
 \RequirePackage[babel=true]{microtype}
-
 \RequirePackage{amsfonts}
 
 \RequirePackage{randgentftest}
-
-\SetCollectionFolderTo{nonexistingFolder}
 
 \SetTrueFolderTo{01-wahr/}
 \SetFalseFolderTo{02-falsch/}
@@ -23,7 +20,7 @@
 % ==================================================================
 \begin{document}
 
-\CreateStatementTest[solutions=true, filepaths=false]{1}{1}
+\CreateStatementTest[solutions=true, filepaths=false]{nonexistingFolder}{1}{1}
 
 \end{document}
 % ==================================================================

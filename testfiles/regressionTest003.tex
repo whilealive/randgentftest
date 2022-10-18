@@ -1,6 +1,6 @@
 % ==================================================================
-% FILE     regressionTest001.tex
-% INFO     -
+% FILE     regressionTest003.tex
+% INFO     topicfolder not set --> take all subfolders!
 %
 % DATE     18.10.2022
 % OWNER    Bischofberger
@@ -14,11 +14,13 @@
 
 \RequirePackage{randgentftest}
 
+\SetTrueFolderTo{01-wahr/}
+\SetFalseFolderTo{02-falsch/}
+
 % ==================================================================
 \begin{document}
 
-\section*{Gesamte Aussagesammlung}
-\PrintEntireLibrary[filepaths=true]{RegressionTestCollection}
+\CreateStatementTest[solutions=true, filepaths=false]{RegressionTestCollection}{1}{1}
 
 \end{document}
 % ==================================================================
