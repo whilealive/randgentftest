@@ -65,6 +65,7 @@
 
 
 % define subfolders
+% TODO: scan for all subfolders by default here?
 \tl_new:N \l__randgentftest_topicfolders_tl
 \NewDocumentCommand \SetTopicFoldersTo { m } { 
   \tl_set:Nn \l__randgentftest_topicfolders_tl { #1 }
@@ -79,6 +80,15 @@
 }
 \NewDocumentCommand \SetFalseFolderTo { m } {
   \tl_set:Nn \l__randgentftest_fFolder_tl { #1 }
+}
+
+
+% basic setup (define minimal set of variables for randgentftest to work)
+\NewDocumentCommand \SetupRandgentftest { m m m } {
+  \SetCollectionFolderTo { #1 }
+  % TODO: take ALL subfolders as topicfolders here
+  \SetTrueFolderTo { #2 }
+  \SetFalseFolderTo { #3 }
 }
 
 
