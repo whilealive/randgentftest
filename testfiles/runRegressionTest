@@ -4,7 +4,7 @@
 # MACHINE  all
 # INFO     
 #
-# DATE     03.10.2022
+# DATE     18.10.2022
 # OWNER    Bischofberger
 # ==================================================================
 
@@ -20,20 +20,39 @@ die(){
 }
 
 
-echo -n "copying pkgfiles... "
-for pkgfile in "${PKGFILES[@]}" ; do
-  cp -f "$SOURCEDIR/$pkgfile" "$SOURCEDIR/$TESTDIR/$pkgfile"
-done
-echo -e "done\n\n"
+prepare(){
+  echo -n "copying pkgfiles... "
+  for pkgfile in "${PKGFILES[@]}" ; do
+    cp -f "$SOURCEDIR/$pkgfile" "$SOURCEDIR/$TESTDIR/$pkgfile"
+  done
+  echo -e "done\n\n"
+}
 
 
+clean(){
+  echo -n -e "\n\ndeleting pkgfiles... "
+  for pkgfile in "${PKGFILES[@]}" ; do
+    rm -f "$SOURCEDIR/$TESTDIR/$pkgfile"
+  done
+  echo -e "done"
+}
+
+
+prepare
 cd "$SOURCEDIR/$TESTDIR"
-latexmk -lualatex -interaction=nonstopmode -file-line-error
 
+# if no argument is given, compile all files in folder
+if [ -z "$1" ] ; then
+  latexmk -lualatex -interaction=nonstopmode -file-line-error
+fi
 
-echo -n -e "\n\ndeleting pkgfiles... "
-for pkgfile in "${PKGFILES[@]}" ; do
-  rm -f "$SOURCEDIR/$TESTDIR/$pkgfile"
-done
-echo -e "done"
+# if first argument is a file, treat all following arguments as potential files
+if [ -f "$1" ] ; then
+  for file in "$@" ; do
+    latexmk -lualatex -interaction=nonstopmode -file-line-error "$file"
+  done
+else
+  die "error: given argument is not a file"
+fi
 
+clean
