@@ -2,7 +2,7 @@
 % FILE     randgentftestbmzcls.cls
 % INFO     
 %
-% DATE     18.10.2022
+% DATE     20.10.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -42,14 +42,15 @@
 \sisetup{per-mode=symbol,exponent-product=\cdot}
 
 \RequirePackage[makeroom]{cancel}
+\newcommand{\Result}[2][0ex]{\underline{\underline{#2\rule[-0.6ex-#1]{0pt}{0pt}}}}
 
-%\RequirePackage{tikz}
-%\usetikzlibrary{calc,angles,intersections,arrows.meta}
-%\tikzset{>={Latex}}
+\RequirePackage{tikz}
+\usetikzlibrary{calc,angles,intersections,arrows.meta}
+\tikzset{>={Latex}}
 
-%\RequirePackage{pgfplots}
-%\pgfplotsset{compat=newest}
-%\pgfplotsset{axis lines=center,axis line style={-Latex}}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=newest}
+\pgfplotsset{axis lines=center,axis line style={-Latex}}
 
 
 % =================================================
@@ -59,6 +60,8 @@
 
 \SetTrueFolderTo{01-wahr/}
 \SetFalseFolderTo{02-falsch/}
+
+\DrawTikZcheckboxes
 
 % Shortcut für TALS GLF Gesamtinhalte
 \newcommand{\TALSGLF}
