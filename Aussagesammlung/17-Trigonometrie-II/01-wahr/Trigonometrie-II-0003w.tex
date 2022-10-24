@@ -1,0 +1,27 @@
+% AUTOR:        Bruno Bischofberger
+% ERSTELLT AM:  24.10.2022
+% GEÄNDERT AM:  24.10.2022
+% AUSRICHTUNG:  TALS
+% INHALTE:      Winkelfunktion, Graph
+
+Passt der Graph zur Funktion $y=\sin(x)$? \quad ($x$ im Bogenmass)\\[1ex]
+\begin{tikzpicture}
+  \begin{axis}
+    [
+      width=70mm,
+      height=40mm,
+      trig format plots=rad,
+      xmin=-2, xmax=10,
+      ymin=-1.2, ymax=1.2,
+      axis lines=center,
+      xlabel style={right},
+      ylabel style={right},
+      xlabel={$x$}, ylabel={$y$},
+      xtick distance=1, ytick distance=1,
+      xtick={-1,1,2,...,13},
+      grid=none,
+    ]
+    \addplot[samples=150,domain=-1:10,thick] {sin(x)};
+  \end{axis}
+\end{tikzpicture}
+
