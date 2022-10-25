@@ -2,7 +2,7 @@
 % FILE     randgentftestbmzcls.cls
 % INFO     
 %
-% DATE     20.10.2022
+% DATE     25.10.2022
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -13,11 +13,11 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
-\ProvidesClass{randgentftestbmzcls}
+\ProvidesClass{randgentftestbmzcls}[2022-10-25 v0.1 randgentftestbmz]
 
-\LoadClass[10pt]{article}
+\LoadClassWithOptions{article}
 \RequirePackage[a4paper,textwidth=160mm,top=30mm,bottom=40mm]{geometry}
-\RequirePackage[ngerman]{babel}
+\RequirePackage{babel}
 \RequirePackage[babel=true]{microtype}
 
 \RequirePackage{amsfonts}

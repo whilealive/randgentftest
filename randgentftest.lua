@@ -2,7 +2,7 @@
 -- FILE     randgentftest.lua
 -- INFO     
 --
--- DATE     18.10.2022
+-- DATE     25.10.2022
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -213,10 +213,7 @@ local function printChecklist(tbl)
 end
 
 
-local function printCheckedChecklist(--[[required]]tbl, --[[required]] tdir, --[[optional]]opt_printpath, --[[optional]]opt_solutions)
-  if opt_solutions then
-    tex.sprint("\\section*{Lösungen}")
-  end
+local function printCheckedChecklist(--[[required]]tbl, --[[required]] tdir, --[[optional]]opt_printpath)
   tex.sprint("\\begin{checklist}\\par")
   for i = 1, #tbl do
     local boxtype = getCheckboxtype(tbl[i], tdir)
@@ -383,7 +380,12 @@ function createRandGenTest(parentdir, subdirstr, tdir, fdir, ntstats, nfstats, f
   printChecklist(fnlist_mixed_filtered)
 
   if bool_printSolutions then
-    printCheckedChecklist(fnlist_mixed_filtered, tfdirs.t, bool_printFilePaths, true)
+    tex.sprint("\\begingroup")
+    tex.sprint("\\color{gray}")
+    tex.sprint("\\textit{\\translate{Solutions}}")
+    tex.sprint("\\vskip\\baselineskip")
+    printCheckedChecklist(fnlist_mixed_filtered, tfdirs.t, bool_printFilePaths)
+    tex.sprint("\\endgroup")
   end
 end
 
@@ -404,7 +406,7 @@ function printAll(parentdir, tdir, fdir, filterstr, --[[optional]]opt_printpath)
 
   table.sort(fnlist_filtered)
 
-  printCheckedChecklist(fnlist_filtered, tfdirs.t, opt_printpath, false)
+  printCheckedChecklist(fnlist_filtered, tfdirs.t, opt_printpath)
 end
 
 
