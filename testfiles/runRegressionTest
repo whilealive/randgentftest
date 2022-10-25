@@ -4,20 +4,14 @@
 # MACHINE  all
 # INFO     
 #
-# DATE     18.10.2022
+# DATE     25.10.2022
 # OWNER    Bischofberger
 # ==================================================================
 
-SOURCEDIR="$HOME/Documents/Work/BMS-ZH/01-Unterricht/12-Projekte/randgentftest"
+SOURCEDIR="$HOME/Documents/Work/BMS-ZH/01-Unterricht/11-Projekte/randgentftest"
 TESTDIR="testfiles"
 
 PKGFILES=("randgentftest.lua" "randgentftest.sty" "randgentftestbmzcls.cls")
-
-
-die(){
-	echo -e "$0: Error: $1" >&2
-	exit 1
-}
 
 
 prepare(){
@@ -44,6 +38,8 @@ cd "$SOURCEDIR/$TESTDIR"
 # if no argument is given, compile all files in folder
 if [ -z "$1" ] ; then
   latexmk -lualatex -interaction=nonstopmode -file-line-error
+  clean
+  exit 0
 fi
 
 # if first argument is a file, treat all following arguments as potential files
@@ -52,7 +48,7 @@ if [ -f "$1" ] ; then
     latexmk -lualatex -interaction=nonstopmode -file-line-error "$file"
   done
 else
-  die "error: given argument is not a file"
+  echo -e "Error: given argument is not a file" >&2
 fi
 
 clean

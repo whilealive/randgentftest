@@ -1,15 +1,14 @@
 % ==================================================================
-% FILE     regressionTest001.tex
+% FILE     regressionTest004.tex
 % INFO     test for non-existing true-/false-folders
 %
-% DATE     18.10.2022
+% DATE     25.10.2022
 % OWNER    Bischofberger
 % ==================================================================
 
-\documentclass[10pt]{article}
+\documentclass[10pt,ngerman]{article}
 
-\RequirePackage[ngerman]{babel}
-\RequirePackage[babel=true]{microtype}
+\RequirePackage{babel}
 \RequirePackage{amsfonts}
 
 \RequirePackage{randgentftest}
@@ -22,7 +21,7 @@
 % ==================================================================
 \begin{document}
 
-\CreateStatementTest[solutions=true, filepaths=false]{RegressionTestCollection}{1}{1}
+\CreateStatementTest[solutions=true,filepaths=false]{RegressionTestCollection}{1}{1}
 
 \clearpage
 
