@@ -1,8 +1,8 @@
 % ==================================================================
-% FILE     regressionTest004.tex
-% INFO     test for non-existing true-/false-folders
+% FILE     s_regressionTest001.tex
+% INFO     print collection
 %
-% DATE     25.10.2022
+% DATE     26.10.2022
 % OWNER    Bischofberger
 % ==================================================================
 
@@ -13,19 +13,13 @@
 
 \usepackage{randgentftest}
 
-\SetTopicFoldersTo{01-Algebra}
-
-%\SetTrueFolderTo{01-wahr/}
-%\SetFalseFolderTo{02-falsch/}
+\SetTrueFolderTo{01-wahr/}
+\SetFalseFolderTo{02-falsch/}
 
 % ==================================================================
 \begin{document}
 
-\CreateStatementTest[solutions=true,filepaths=false]{RegressionTestCollection}{1}{1}
-
-\clearpage
-
-% FIXME: true-/false-distinction here is currently not possible (see checkboxes!)
+\section*{Gesamte Aussagesammlung}
 \PrintEntireLibrary[filepaths=true]{RegressionTestCollection}
 
 \end{document}
