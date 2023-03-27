@@ -2,7 +2,7 @@
 -- FILE     randgentftest.lua
 -- INFO     
 --
--- DATE     25.10.2022
+-- DATE     27.03.2023
 -- OWNER    Bischofberger
 -- ==================================================================
 
@@ -24,6 +24,11 @@ local function isdir(dir)
     return false
   end
   return true
+end
+
+
+local function isempty(str)
+  return str == nil or str == ''
 end
 
 
@@ -392,20 +397,31 @@ end
 
 -- main function to print the entire library
 -- FIXME: true-/false-distinction will fail here if names of true-/false-folders are not correct - and we cannot check if they really exist...
-function printAll(parentdir, tdir, fdir, filterstr, --[[optional]]opt_printpath)
+function printAll(parentdir, subdirstr, tdir, fdir, filterstr, --[[optional]]opt_printpath)
   if not isdir(parentdir) then 
     return false 
   end
 
-  local sep = getfolderpathseparator()
-  local tfdirs = parseTrueFalseDirs(tdir, fdir)
-  local fnlist = listTeXfiles(lfs.currentdir()..sep..parentdir)
+  local fnlist = {}
+
+  if isempty(subdirstr) then  
+    -- collect all files in parentfolder
+    local sep = getfolderpathseparator()
+    fnlist = listTeXfiles(lfs.currentdir()..sep..parentdir)
+  else  
+    -- only collect files in given subdir list
+    local dirlist = parseTeXdirstring(parentdir, subdirstr)
+    for i = 1, #dirlist do
+      concat(fnlist, listTeXfiles(dirlist[i]))
+    end
+  end
 
   local filterlist = parseTeXfilterstring(filterstr)
   local fnlist_filtered  = filter(fnlist, filterlist)
 
   table.sort(fnlist_filtered)
 
+  local tfdirs = parseTrueFalseDirs(tdir, fdir)
   printCheckedChecklist(fnlist_filtered, tfdirs.t, opt_printpath)
 end
 

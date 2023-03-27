@@ -2,7 +2,7 @@
 % FILE     randgentftest.sty
 % INFO     
 %
-% DATE     25.10.2022
+% DATE     27.03.2023
 % OWNER    Bischofberger
 % ==================================================================
 % This work may be distributed and/or modified under the
@@ -156,11 +156,28 @@
     require('randgentftest.lua')
     \bool_if:NTF{\l__print_filepaths_bool}
     {%
-      printAll('#2', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', ' ', true)
+      printAll('#2', ' ', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', ' ', true)
     }%
     {%
-      printAll('#2', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', ' ', false)
+      printAll('#2', ' ', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', ' ', ' ', false)
     }%
   }%
 }%
 
+% args: #1: options (optional),
+%       #2: name of collection folder
+% options:  printpaths=true  (default: false)
+\NewDocumentCommand{\PrintAllStatemensInActiveTopicFolders}{ o m }
+{%
+  \IfNoValueF { #1 } { \keys_set:nn { randgentftest/print } { #1 } }
+  \directlua{%
+    require('randgentftest.lua')
+    \bool_if:NTF{\l__print_filepaths_bool}
+    {%
+      printAll('#2', '\l__randgentftest_topicfolders_tl', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', ' ', true)
+    }%
+    {%
+      printAll('#2', '\l__randgentftest_topicfolders_tl', '\l__randgentftest_tFolder_tl', '\l__randgentftest_fFolder_tl', ' ', false)
+    }%
+  }%
+}%
